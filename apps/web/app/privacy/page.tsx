@@ -35,7 +35,7 @@ export default function PrivacyPage() {
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-12">
           <h2 className="text-xl font-bold text-gray-900 mb-4">Service Provider</h2>
           <div className="space-y-2 text-gray-700">
-            <p><strong>Company:</strong> Bluecodes Inc.</p>
+            <p><strong>Company:</strong> Blucodes Inc.</p>
             <p><strong>App:</strong> Jaddpi</p>
             <p><strong>Email:</strong> <a href="mailto:jaddpi1@gmail.com" className="text-blue-600 hover:underline">jaddpi1@gmail.com</a></p>
             <p><strong>Location:</strong> British Columbia, Canada</p>
@@ -339,7 +339,7 @@ export default function PrivacyPage() {
                 </p>
                 <div className="bg-gray-50 rounded p-4 space-y-2">
                   <p><strong>Email:</strong> <a href="mailto:jaddpi1@gmail.com" className="text-blue-600 hover:underline">jaddpi1@gmail.com</a></p>
-                  <p><strong>Company:</strong> Bluecodes Inc.</p>
+                  <p><strong>Company:</strong> Blucodes Inc.</p>
                   <p><strong>Location:</strong> British Columbia, Canada</p>
                 </div>
                 <p className="mt-4 text-sm">
@@ -352,7 +352,7 @@ export default function PrivacyPage() {
 
         {/* Footer */}
         <div className="mt-12 p-6 bg-gray-100 rounded-lg text-center text-gray-600">
-          <p>© {new Date().getFullYear()} Bluecodes Inc. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Blucodes Inc. All rights reserved.</p>
           <p className="text-sm mt-2">Last Updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
         </div>
 

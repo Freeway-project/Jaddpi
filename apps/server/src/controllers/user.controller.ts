@@ -7,6 +7,7 @@ import { Payment } from "../models/Payment";
 import { InvoiceService } from "../services/invoice.service";
 import { User } from "../models/user.model";
 import { normalizePhone } from "../utils/phoneNormalization";
+import { jwtUtils } from "../utils/jwt";
 
 export const UserController = {
   async signup(req: Request, res: Response, next: NextFunction) {
@@ -137,27 +138,40 @@ export const UserController = {
         await UserService.verifyPhone(user._id.toString());
       }
 
-      // Create session for the user
-      // req.session.userId = user._id.toString();
+      // Generate JWT token
+      const token = jwtUtils.generateToken({
+        userId: user._id.toString(),
+        email: user.auth?.email,
+        phone: user.auth?.phone,
+        roles: user.roles || []
+      });
+
+      if (process.env.NODE_ENV === 'development') {
+        console.log('🚀 ~ signup ~ token generated successfully');
+      }
 
       // Return user without sensitive data
       const response = {
-        _id: user._id,
-        uuid: user.uuid,
-        accountType: user.accountType,
-        roles: user.roles,
-        status: user.status,
-        profile: user.profile,
-        businessProfile: user.businessProfile,
-        email: user.auth?.email,
-        phone: user.auth?.phone,
-        auth: {
-          email: user.auth.email,
-          phone: user.auth.phone,
-          emailVerifiedAt: user.auth.emailVerifiedAt,
-          phoneVerifiedAt: user.auth.phoneVerifiedAt,
-        },
-        createdAt: user.createdAt,
+        message: "Signup successful",
+        token,
+        user: {
+          _id: user._id,
+          uuid: user.uuid,
+          accountType: user.accountType,
+          roles: user.roles,
+          status: user.status,
+          profile: user.profile,
+          businessProfile: user.businessProfile,
+          email: user.auth?.email,
+          phone: user.auth?.phone,
+          auth: {
+            email: user.auth.email,
+            phone: user.auth.phone,
+            emailVerifiedAt: user.auth.emailVerifiedAt,
+            phoneVerifiedAt: user.auth.phoneVerifiedAt,
+          },
+          createdAt: user.createdAt,
+        }
       };
 
       res.status(201).json(response);

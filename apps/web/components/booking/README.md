@@ -45,7 +45,7 @@ components/booking/
 - `currentStep: BookingStep` - Currently active step
 
 **Features**:
-- Blue gradient header with Porter-style design
+- Blu gradient header with Porter-style design
 - Active/completed/pending state visualization
 - Responsive step indicators
 
@@ -143,7 +143,7 @@ interface UserDetails {
 ## Design System
 
 ### Color Palette (Porter-Inspired)
-- **Primary Blue**: `from-blue-600 to-blue-700`
+- **Primary Blu**: `from-blue-600 to-blue-700`
 - **Hover**: `from-blue-700 to-blue-800`
 - **Background**: `from-blue-50 to-indigo-50`
 - **Accents**: `bg-blue-100`, `text-blue-600`

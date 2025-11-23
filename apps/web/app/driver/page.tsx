@@ -7,11 +7,10 @@ import { deliveryAPI } from '../../lib/api/delivery';
 import { useAuthStore } from '../../lib/stores/authStore';
 import { useDriverLocation } from '../../hooks/useDriverLocation';
 import Header from '../../components/layout/Header';
-import { Package, CheckCircle, Clock, Loader2, MapPin, Phone, User, Navigation, ExternalLink, Radio, Camera, Image as ImageIcon } from 'lucide-react';
+import { Package, CheckCircle, Clock, Loader2, MapPin, Phone, User, Navigation, ExternalLink, Radio, Camera, Image as ImageIcon, FileText, AlertCircle } from 'lucide-react';
 import { Button } from '@workspace/ui/components/button';
 import { useFcmToken } from '../../hooks/useFcmToken';
 import PhotoCapture from '../../components/booking/PhotoCapture';
-import TestOrderButton from '../../components/TestOrderButton';
 import toast from 'react-hot-toast';
 
 type OrderStatus = 'available' | 'in_progress' | 'completed';
@@ -628,8 +627,6 @@ export default function DriverDashboardPage() {
               <p className="text-sm text-gray-600 mt-1">Manage your deliveries</p>
             </div>
             <div className="flex items-center gap-3">
-              {/* Test Order Button */}
-              <TestOrderButton />
               {/* Silent refresh indicator */}
               {isRefreshing && (
                 <div className="flex items-center gap-2 text-xs text-gray-500">
@@ -887,9 +884,19 @@ export default function DriverDashboardPage() {
                           </div>
                         </div>
                         {order.pickup?.notes && (
-                          <div className="mt-2 p-2 bg-blue-50 rounded border border-blue-200">
-                            <p className="text-xs font-semibold text-blue-700 mb-1">Pickup Notes:</p>
-                            <p className="text-xs text-gray-700">{order.pickup.notes}</p>
+                          <div className="mt-3 p-3 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg border-2 border-blue-300 shadow-sm">
+                            <div className="flex items-start gap-2">
+                              <div className="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <FileText className="w-3.5 h-3.5 text-white" />
+                              </div>
+                              <div className="flex-1">
+                                <p className="text-xs font-bold text-blue-900 mb-1.5 uppercase tracking-wide flex items-center gap-1">
+                                  <AlertCircle className="w-3.5 h-3.5" />
+                                  Pickup Instructions
+                                </p>
+                                <p className="text-sm text-gray-800 leading-relaxed font-medium">{order.pickup.notes}</p>
+                              </div>
+                            </div>
                           </div>
                         )}
                       </div>
@@ -931,9 +938,19 @@ export default function DriverDashboardPage() {
                           </div>
                         </div>
                         {order.dropoff?.notes && (
-                          <div className="mt-2 p-2 bg-green-50 rounded border border-green-200">
-                            <p className="text-xs font-semibold text-green-700 mb-1">Dropoff Notes:</p>
-                            <p className="text-xs text-gray-700">{order.dropoff.notes}</p>
+                          <div className="mt-3 p-3 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg border-2 border-green-300 shadow-sm">
+                            <div className="flex items-start gap-2">
+                              <div className="w-6 h-6 rounded-full bg-green-600 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <FileText className="w-3.5 h-3.5 text-white" />
+                              </div>
+                              <div className="flex-1">
+                                <p className="text-xs font-bold text-green-900 mb-1.5 uppercase tracking-wide flex items-center gap-1">
+                                  <AlertCircle className="w-3.5 h-3.5" />
+                                  Delivery Instructions
+                                </p>
+                                <p className="text-sm text-gray-800 leading-relaxed font-medium">{order.dropoff.notes}</p>
+                              </div>
+                            </div>
                           </div>
                         )}
                       </div>
@@ -971,7 +988,20 @@ export default function DriverDashboardPage() {
                     </div>
                   </div>
                   {order.package?.description && (
-                    <p className="text-xs text-gray-600 mt-2">{order.package.description}</p>
+                    <div className="mt-3 p-3 bg-gradient-to-br from-amber-50 to-orange-50 rounded-lg border-2 border-amber-300 shadow-sm">
+                      <div className="flex items-start gap-2">
+                        <div className="w-6 h-6 rounded-full bg-amber-600 flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <Package className="w-3.5 h-3.5 text-white" />
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-xs font-bold text-amber-900 mb-1.5 uppercase tracking-wide flex items-center gap-1">
+                            <AlertCircle className="w-3.5 h-3.5" />
+                            Package Details
+                          </p>
+                          <p className="text-sm text-gray-800 leading-relaxed font-medium">{order.package.description}</p>
+                        </div>
+                      </div>
+                    </div>
                   )}
                 </div>
 

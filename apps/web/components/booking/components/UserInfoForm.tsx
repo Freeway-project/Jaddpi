@@ -201,7 +201,7 @@ export default function UserInfoForm({
               placeholder={
                 type === 'sender'
                   ? 'e.g., Ring doorbell, Gate code: 1234'
-                  : 'e.g., Leave at front desk, Apt 201'
+                  : 'e.g., Buzzer code , parking inst, dogs'
               }
               value={userDetails.notes}
               onChange={(e) => onUpdate({ ...userDetails, notes: e.target.value })}
