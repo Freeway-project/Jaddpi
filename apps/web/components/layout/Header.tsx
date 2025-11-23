@@ -1,8 +1,9 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Truck, Users, Building2, LogOut, ChevronDown, MapPin } from 'lucide-react';
+import { Users, Building2, LogOut, ChevronDown, MapPin } from 'lucide-react';
 import { Button } from '@workspace/ui/components/button';
 import { useAuthStore } from '../../lib/stores/authStore';
 import { useState } from 'react';
@@ -39,10 +40,14 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-14 sm:h-16">
           <Link href={user ? "/" : "/"} className="flex items-center space-x-2 sm:space-x-3">
-            <div className="p-1.5 sm:p-2 bg-blue-600 rounded-lg sm:rounded-xl">
-              <Truck className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-            </div>
-            <span className="text-lg sm:text-xl font-bold text-gray-900">Jaddpi</span>
+            <Image
+              src="/logo.png"
+              alt="Jaddpi Logo"
+              width={120}
+              height={40}
+              className="h-8 sm:h-10 w-auto"
+              priority
+            />
           </Link>
 
           <div className="flex items-center space-x-2 sm:space-x-3">
