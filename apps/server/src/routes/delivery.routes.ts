@@ -10,6 +10,7 @@ import { logger } from "../utils/logger";
 import { OrderExpiryService } from "../services/orderExpiry.service";
 import { DeliveryPhotoController } from "../controllers/deliveryPhoto.controller";
 import { normalizePhone } from "../utils/phoneNormalization";
+import { uploadBase64ToCloudinary } from "../utils/cloudinary";
 
 const router = Router();
 
@@ -268,6 +269,26 @@ router.post("/create-order", requireAuth, async (req: Request, res: Response) =>
     const now = new Date();
     const expiresAt = new Date(now.getTime() + 30 * 60 * 1000); // 30 minutes
 
+    // Handle item photo upload if provided
+    let itemPhotoUrl: string | undefined = undefined;
+    if (packageDetails.itemPhoto) {
+      try {
+        logger.info({ orderId }, "Uploading item photo to Cloudinary");
+        const uploadResult = await uploadBase64ToCloudinary(packageDetails.itemPhoto, {
+          folder: `item-photos/${orderId}`,
+          resource_type: "image",
+          quality: "auto",
+          width: 800,
+          crop: "limit"
+        });
+        itemPhotoUrl = uploadResult.secure_url;
+        logger.info({ orderId, photoUrl: itemPhotoUrl }, "Item photo uploaded successfully");
+      } catch (uploadError: any) {
+        logger.error({ orderId, error: uploadError.message }, "Failed to upload item photo");
+        throw new ApiError(400, "Failed to upload item photo. Please try again.");
+      }
+    }
+
     // Create order
     const order = await DeliveryOrder.create({
       orderId,
@@ -307,7 +328,9 @@ router.post("/create-order", requireAuth, async (req: Request, res: Response) =>
       package: {
         size: packageDetails.size,
         weight: packageDetails.weight,
-        description: packageDetails.description
+        description: packageDetails.description,
+        itemPhotoUrl: itemPhotoUrl || packageDetails.itemPhotoUrl,
+        itemPrice: packageDetails.itemPrice
       },
       pricing: finalPricing,
       coupon: couponData,

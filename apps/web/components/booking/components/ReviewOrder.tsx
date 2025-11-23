@@ -8,6 +8,7 @@ import { UserDetails } from './UserInfoForm';
 import { couponAPI } from '../../../lib/api/coupon';
 import { Input } from '@workspace/ui/components/input';
 import { Button } from '@workspace/ui/components/button';
+import ItemPhotoUpload from './ItemPhotoUpload';
 
 interface ReviewOrderProps {
   sender: UserDetails;
@@ -29,9 +30,13 @@ interface ReviewOrderProps {
     gst: number;
     newTotal: number;
   } | null) => void;
+  itemPhoto?: string;
+  onItemPhotoSelected?: (base64Photo: string) => void;
+  itemPrice?: string;
+  onItemPriceChanged?: (price: string) => void;
 }
 
-export default function ReviewOrder({ sender, recipient, estimate, appliedCoupon, onCouponApplied }: ReviewOrderProps) {
+export default function ReviewOrder({ sender, recipient, estimate, appliedCoupon, onCouponApplied, itemPhoto, onItemPhotoSelected, itemPrice, onItemPriceChanged }: ReviewOrderProps) {
   const [couponCode, setCouponCode] = useState('');
   const [isValidating, setIsValidating] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -119,6 +124,37 @@ export default function ReviewOrder({ sender, recipient, estimate, appliedCoupon
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Item Photo Upload - MANDATORY */}
+        <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <ItemPhotoUpload
+            onPhotoSelected={onItemPhotoSelected || (() => {})}
+            existingPhoto={itemPhoto}
+          />
+        </div>
+
+        {/* Item Price */}
+        <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <h4 className="font-semibold text-gray-900 mb-3 text-sm">Item Value (Optional)</h4>
+          <p className="text-xs text-gray-500 mb-3">
+            Declare the approximate value of your item for insurance purposes
+          </p>
+          <div className="relative">
+            <span className="absolute left-3 top-2.5 text-gray-500 text-sm">$</span>
+            <Input
+              type="number"
+              placeholder="0.00"
+              value={itemPrice}
+              onChange={(e) => onItemPriceChanged?.(e.target.value)}
+              className="h-10 text-sm pl-7 border-gray-200 focus:border-blue-600 focus:ring-0"
+              step="0.01"
+              min="0"
+            />
+          </div>
+          <p className="text-xs text-gray-400 mt-2 italic">
+            This helps us ensure appropriate care for your package
+          </p>
         </div>
 
         {/* Coupon Input */}

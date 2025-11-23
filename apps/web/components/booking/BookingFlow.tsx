@@ -123,6 +123,8 @@ export default function BookingFlow({
     gst: number;
     newTotal: number;
   } | null>(null);
+  const [itemPhoto, setItemPhoto] = useState<string>(''); // base64
+  const [itemPrice, setItemPrice] = useState<string>('');
   const [orderId, setOrderId] = useState<string | null>(null);
   const [isCreatingOrder, setIsCreatingOrder] = useState(false);
 
@@ -200,6 +202,9 @@ export default function BookingFlow({
     if (currentStep === 'recipient') {
       return recipient.name && recipient.phone && recipient.address;
     }
+    if (currentStep === 'review') {
+      return !!itemPhoto; // Item photo is mandatory (base64)
+    }
     return true;
   };
 
@@ -222,6 +227,8 @@ export default function BookingFlow({
         package: {
           size: initialPackageSize,
           description: recipient.notes || sender.notes,
+          itemPhoto: itemPhoto, // Send base64 - will be uploaded by backend
+          itemPrice: itemPrice ? Math.round(parseFloat(itemPrice) * 100) : undefined, // Convert to cents
         },
         pricing: estimate.data.fare,
         distance: estimate.data.distance,
@@ -403,6 +410,10 @@ export default function BookingFlow({
                   estimate={estimate}
                   appliedCoupon={appliedCoupon}
                   onCouponApplied={handleCouponApplied}
+                  itemPhoto={itemPhoto}
+                  onItemPhotoSelected={setItemPhoto}
+                  itemPrice={itemPrice}
+                  onItemPriceChanged={setItemPrice}
                 />
               )}
 
@@ -541,6 +552,10 @@ export default function BookingFlow({
                   estimate={estimate}
                   appliedCoupon={appliedCoupon}
                   onCouponApplied={handleCouponApplied}
+                  itemPhoto={itemPhoto}
+                  onItemPhotoSelected={setItemPhoto}
+                  itemPrice={itemPrice}
+                  onItemPriceChanged={setItemPrice}
                 />
               )}
 

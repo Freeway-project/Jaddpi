@@ -40,6 +40,8 @@ export interface DeliveryOrderDoc extends Document<Types.ObjectId> {
     size: "XS" | "S" | "M" | "L";
     weight?: string;
     description?: string;
+    itemPhotoUrl?: string; // Cloudinary URL for item photo (uploaded by sender)
+    itemPrice?: number; // Declared value of the item (in cents, like pricing)
   };
 
   pricing: {
@@ -147,7 +149,9 @@ const DeliveryOrderSchema = new Schema<DeliveryOrderDoc>(
     package: {
       size: { type: String, enum: ["XS", "S", "M", "L"], required: true },
       weight: String,
-      description: String
+      description: String,
+      itemPhotoUrl: String, // Cloudinary URL for item photo (uploaded by sender)
+      itemPrice: Number // Declared value of the item (in cents)
     },
     Qrid: { type: String,  },
 
