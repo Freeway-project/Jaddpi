@@ -28,7 +28,7 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://yourdomain.com'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://jaddpi.com'),
   title: {
     default: 'Jaddpi - Fast & Reliable Delivery Service',
     template: '%s | Jaddpi'
