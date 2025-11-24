@@ -44,7 +44,8 @@ export default function DriverLoginPage() {
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
-        const errorMessage = (error as any).response?.data?.message || error.message || 'Invalid credentials';
+        const axiosError = error as { response?: { data?: { message?: string } } };
+        const errorMessage = axiosError.response?.data?.message || error.message || 'Invalid credentials';
         toast.error(errorMessage);
       } else {
         toast.error('An unknown error occurred');
