@@ -23,6 +23,26 @@ interface ExtendedOrder extends Order {
   };
   itemImage?: string;
   description?: string;
+  pickup?: {
+    address: string;
+    contactName?: string;
+    contactPhone?: string;
+    coordinates?: {
+      lat: number;
+      lng: number;
+    };
+    photoUrl?: string; // Added photoUrl property
+  };
+  dropoff?: {
+    address: string;
+    contactName?: string;
+    contactPhone?: string;
+    coordinates?: {
+      lat: number;
+      lng: number;
+    };
+    photoUrl?: string; // Added photoUrl property
+  };
 }
 
 type SortField = 'createdAt' | 'orderId' | 'total' | 'status';

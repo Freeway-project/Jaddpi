@@ -47,6 +47,13 @@ jobs:
             # These are needed for the web app build to generate firebase-messaging-sw.js
             export $(cat .env | grep '^NEXT_PUBLIC_FIREBASE_' | xargs)
 
+            # Build the frontend
+            echo "🔨 Building the frontend..."
+            cd apps/web || exit 1
+            pnpm install
+            pnpm run build
+            cd - || exit 1
+
             # Build new images
             echo "🔨 Building Docker images..."
             docker compose build --no-cache
@@ -97,4 +104,3 @@ jobs:
           else
             echo "❌ Deployment to VPS failed"
             exit 1
-          fi
