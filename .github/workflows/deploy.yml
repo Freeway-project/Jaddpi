@@ -80,6 +80,15 @@ jobs:
 
             echo "✅ Deployment completed successfully!"
 
+      - name: Capture and Display Logs on Failure
+        if: failure()
+        run: |
+          echo "🚨 Deployment failed. Capturing logs..."
+          docker compose logs > deployment-logs.txt
+          echo "📄 Deployment logs saved to deployment-logs.txt"
+          echo "🔍 Displaying the last 100 lines of logs:"
+          tail -n 100 deployment-logs.txt
+
       - name: Notify Deployment Status
         if: always()
         run: |
