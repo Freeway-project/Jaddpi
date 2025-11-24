@@ -8,9 +8,9 @@ import { Package, Search, CheckCircle, Clock, XCircle, MapPin, User, DollarSign,
 const Modal = ({ isOpen, onClose, children }: { isOpen: boolean; onClose: () => void; children: React.ReactNode }) => {
   if (!isOpen) return null;
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-white p-4 rounded shadow-lg max-w-md w-full">
-        <button className="absolute top-2 right-2 text-gray-500" onClick={onClose}>X</button>
+    <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex items-center justify-center">
+      <div className="bg-white p-4 rounded shadow-lg max-w-md w-full text-gray-900 relative">
+        <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onClick={onClose}>X</button>
         {children}
       </div>
     </div>
@@ -370,28 +370,58 @@ export default function OrdersPage() {
       {/* Modal for displaying order details */}
       {selectedOrder && (
         <Modal isOpen={isModalOpen} onClose={closeModal}>
-          <div className="p-4">
+          <div className="p-4 space-y-4">
             <h3 className="text-lg font-semibold mb-4">Order Details</h3>
-            <div className="space-y-2">
+            <div>
+              <strong>Order ID:</strong> {selectedOrder._id}
+            </div>
+            {selectedOrder.payment?.stripeId && (
               <div>
-                <strong>Item Image:</strong>
-                <img src={selectedOrder.itemImage || '/placeholder.png'} alt="Item" className="w-32 h-32 object-cover mt-2" />
+                <strong>Stripe Payment ID:</strong> {selectedOrder.payment.stripeId}
               </div>
+            )}
+            <div>
+              <strong>Item Image:</strong>
+              <img src={selectedOrder.itemImage || '/placeholder.png'} alt="Item" className="w-32 h-32 object-cover mt-2" />
+            </div>
+            <div>
+              <strong>Pickup Photo:</strong>
+              <img src={selectedOrder.pickup?.photoUrl || '/placeholder.png'} alt="Pickup" className="w-32 h-32 object-cover mt-2" />
+            </div>
+            <div>
+              <strong>Dropoff Photo:</strong>
+              <img src={selectedOrder.dropoff?.photoUrl || '/placeholder.png'} alt="Dropoff" className="w-32 h-32 object-cover mt-2" />
+            </div>
+            <div>
+              <strong>Description:</strong> {selectedOrder.description || 'No description available'}
+            </div>
+            <div>
+              <strong>Driver Name:</strong> {selectedOrder.driver?.profile?.name || 'N/A'}
+            </div>
+            <div>
+              <strong>Driver Contact:</strong> {selectedOrder.driver?.profile?.contact || 'N/A'}
+            </div>
+            <div>
+              <strong>Pickup Address:</strong> {selectedOrder.pickup?.address || 'N/A'}
+            </div>
+            <div>
+              <strong>Dropoff Address:</strong> {selectedOrder.dropoff?.address || 'N/A'}
+            </div>
+            <div>
+              <strong>Order Placed At:</strong> {new Date(selectedOrder.createdAt).toLocaleString()}
+            </div>
+            {selectedOrder.logs?.pickup && (
               <div>
-                <strong>Description:</strong> {selectedOrder.description || 'No description available'}
+                <strong>Picked Up At:</strong> {new Date(selectedOrder.logs.pickup).toLocaleString()}
               </div>
+            )}
+            {selectedOrder.logs?.delivered && (
               <div>
-                <strong>Driver:</strong> {selectedOrder.driver?.profile?.name || 'N/A'}
+                <strong>Delivered At:</strong> {new Date(selectedOrder.logs.delivered).toLocaleString()}
               </div>
-              <div>
-                <strong>Pickup Address:</strong> {selectedOrder.pickup?.address || 'N/A'}
-              </div>
-              <div>
-                <strong>Dropoff Address:</strong> {selectedOrder.dropoff?.address || 'N/A'}
-              </div>
-              <div>
-                <strong>Total Amount:</strong> ${((selectedOrder.pricing?.total || 0) / 100).toFixed(2)}
-              </div>
+            )}
+            <div>
+              <strong>Total Amount:</strong> ${((selectedOrder.pricing?.total || 0) / 100).toFixed(2)}
             </div>
           </div>
         </Modal>

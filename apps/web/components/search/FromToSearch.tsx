@@ -175,10 +175,10 @@ export default function FromToSearch({
   };
 
   const packageTypes = [
-    { id: 'envelope', label: 'Envelope', icon: '📄', size: '8.5x11 in' },
-    { id: 'small', label: 'Small', icon: '📦', size: '10×10×10 in' },
-    { id: 'medium', label: 'Medium', icon: '📦', size: '14×14×14 in' },
-    { id: 'large', label: 'Large', icon: '📦', size: '16×16×16 in' },
+    { id: 'envelope', label: 'Envelope', icon: '📄', size: '8.5x11 ' },
+    { id: 'small', label: 'Small', icon: '📦', size: '10×10×10 ' },
+    { id: 'medium', label: 'Medium', icon: '📦', size: '14×14×14 ' },
+    { id: 'large', label: 'Large', icon: '📦', size: '16×16×16 ' },
   ];
 
   return (
@@ -263,7 +263,7 @@ export default function FromToSearch({
                 </button>
               ))}
             </div>
-            <p className="text-center text-xs text-gray-500 mt-3">*Max weight for packages is 15kg. Envelopes up to 5kg.</p>
+            <p className="text-center text-xs text-gray-500 mt-3">*Max weight for packages is 15kg. Envelopes up to 5kg</p>
           </div>
 
           {/* Description */}
