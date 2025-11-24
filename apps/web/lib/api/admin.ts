@@ -53,13 +53,13 @@ export interface Order {
     profile: { name: string };
     auth: { phone?: string };
   };
-  pickup: {
+  pickup?: {
     address: string;
     contactName?: string;
     contactPhone?: string;
     coordinates?: { lat: number; lng: number };
   };
-  dropoff: {
+  dropoff?: {
     address: string;
     contactName?: string;
     contactPhone?: string;

@@ -31,7 +31,7 @@ interface ExtendedOrder extends Order {
       lat: number;
       lng: number;
     };
-    photoUrl?: string; // Added photoUrl property
+    photoUrl?: string;
   };
   dropoff?: {
     address: string;
@@ -41,7 +41,7 @@ interface ExtendedOrder extends Order {
       lat: number;
       lng: number;
     };
-    photoUrl?: string; // Added photoUrl property
+    photoUrl?: string;
   };
 }
 
@@ -422,7 +422,7 @@ export default function OrdersPage() {
               <strong>Driver Name:</strong> {selectedOrder.driver?.profile?.name || 'N/A'}
             </div>
             <div>
-              <strong>Driver Contact:</strong> {selectedOrder.driver?.profile?.contact || 'N/A'}
+              <strong>Driver Contact:</strong> {selectedOrder.driver?.auth?.phone || 'N/A'}
             </div>
             <div>
               <strong>Pickup Address:</strong> {selectedOrder.pickup?.address || 'N/A'}
@@ -433,14 +433,14 @@ export default function OrdersPage() {
             <div>
               <strong>Order Placed At:</strong> {new Date(selectedOrder.createdAt).toLocaleString()}
             </div>
-            {selectedOrder.logs?.pickup && (
+            {selectedOrder.timeline?.pickedUpAt && (
               <div>
-                <strong>Picked Up At:</strong> {new Date(selectedOrder.logs.pickup).toLocaleString()}
+                <strong>Picked Up At:</strong> {new Date(selectedOrder.timeline.pickedUpAt).toLocaleString()}
               </div>
             )}
-            {selectedOrder.logs?.delivered && (
+            {selectedOrder.timeline?.deliveredAt && (
               <div>
-                <strong>Delivered At:</strong> {new Date(selectedOrder.logs.delivered).toLocaleString()}
+                <strong>Delivered At:</strong> {new Date(selectedOrder.timeline.deliveredAt).toLocaleString()}
               </div>
             )}
             <div>

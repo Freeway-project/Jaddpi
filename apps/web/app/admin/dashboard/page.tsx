@@ -314,8 +314,8 @@ function OverviewTab({ stats, activities, orders, metrics }: {
                     </span>
                   </div>
                   <div className="text-xs text-gray-600 space-y-1">
-                    <p>From: {order.pickup.address}</p>
-                    <p>To: {order.dropoff.address}</p>
+                    <p>From: {order.pickup?.address}</p>
+                    <p>To: {order.dropoff?.address}</p>
                   </div>
                   <div className="mt-2 flex items-center justify-between">
                     <span className="text-sm font-semibold text-gray-900">
@@ -477,8 +477,8 @@ function OrdersTab({ orders, loading, searchQuery, setSearchQuery, statusFilter,
                         <div className="text-gray-500 text-xs">{order.userId?.auth?.phone || order.userId?.auth?.email}</div>
                       </div>
                     </td>
-                    <td className="px-4 py-4 text-sm text-gray-600 max-w-xs truncate">{order.pickup.address}</td>
-                    <td className="px-4 py-4 text-sm text-gray-600 max-w-xs truncate">{order.dropoff.address}</td>
+                    <td className="px-4 py-4 text-sm text-gray-600 max-w-xs truncate">{order.pickup?.address}</td>
+                    <td className="px-4 py-4 text-sm text-gray-600 max-w-xs truncate">{order.dropoff?.address}</td>
                     <td className="px-4 py-4 text-sm">
                       {order.driver ? (
                         <div>
