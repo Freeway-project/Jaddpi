@@ -1,5 +1,12 @@
 import { apiClient } from './client'; 
 
+export interface Pagination {
+  currentPage: number;
+  totalPages: number;
+  totalRecords: number;
+  limit: number;
+}
+
 export interface DashboardStats {
   users: {
     total: number;
@@ -145,7 +152,7 @@ export interface SmsUsageStats {
     costDaily: number;
     costMonthly: number;
     limits: {
-      perPhone: any;
+      perPhone: Record<string, unknown>;
       global: {
         hourly: number;
         daily: number;
@@ -156,7 +163,7 @@ export interface SmsUsageStats {
         monthlyLimit: number;
         perSmsCost: number;
       };
-      cooldown: any;
+      cooldown: Record<string, unknown>;
     };
   };
   percentages: {
@@ -225,6 +232,22 @@ export interface CreateCouponData {
   description?: string;
 }
 
+export interface EarlyAccessRequest {
+  _id: string;
+  name: string;
+  email: string;
+  userType: 'individual' | 'business';
+  status: 'pending' | 'approved' | 'rejected';
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+  message?: string;
+}
+
 export const adminAPI = {
   async getDashboardStats(): Promise<DashboardStats> {
     const res = await apiClient.get('/admin/dashboard/stats');
@@ -233,7 +256,7 @@ export const adminAPI = {
 
   async getRecentActivity(limit = 50, skip = 0): Promise<{
     activities: Activity[];
-    pagination: any;
+    pagination: Pagination;
   }> {
     const res = await apiClient.get('/admin/activity', {
       params: { limit, skip }
@@ -243,7 +266,7 @@ export const adminAPI = {
 
   async getActiveOrders(limit = 50, skip = 0): Promise<{
     orders: Order[];
-    pagination: any;
+    pagination: Pagination;
   }> {
     const res = await apiClient.get('/admin/orders/active', {
       params: { limit, skip }
@@ -260,7 +283,7 @@ export const adminAPI = {
   } = {}): Promise<{
     orders: Order[];
     total: number;
-    pagination: any;
+    pagination: Pagination;
   }> {
     const res = await apiClient.get('/admin/orders', {
       params: filters
@@ -277,7 +300,7 @@ export const adminAPI = {
   } = {}): Promise<{
     users: User[];
     total: number;
-    pagination: any;
+    pagination: Pagination;
   }> {
     const res = await apiClient.get('/admin/users', {
       params: filters
@@ -297,7 +320,7 @@ export const adminAPI = {
     skip?: number;
   } = {}): Promise<{
     drivers: Driver[];
-    pagination: any;
+    pagination: Pagination;
   }> {
     const res = await apiClient.get('/admin/drivers', {
       params: filters
@@ -364,14 +387,14 @@ export const adminAPI = {
     status?: string;
     limit?: number;
     skip?: number;
-  } = {}): Promise<any> {
+  } = {}): Promise<ApiResponse<EarlyAccessRequest[]>> {
     const res = await apiClient.get('/admin/early-access-requests', {
       params: filters
     });
     return res.data;
   },
 
-  async updateEarlyAccessRequestStatus(requestId: string, status: string): Promise<any> {
+  async updateEarlyAccessRequestStatus(requestId: string, status: string): Promise<ApiResponse<EarlyAccessRequest>> {
     const res = await apiClient.put(`/admin/early-access-requests/${requestId}/status`, { status });
     return res.data;
   },

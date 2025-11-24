@@ -29,10 +29,17 @@ export const couponAPI = {
     try {
       const response = await apiClient.post('/coupons/validate', data);
       return response.data;
-    } catch (error: any) {
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        const axiosError = error as { response?: { data?: { message?: string } } };
+        return {
+          success: false,
+          message: axiosError.response?.data?.message || 'Failed to validate coupon',
+        };
+      }
       return {
         success: false,
-        message: error?.response?.data?.message || 'Failed to validate coupon',
+        message: 'An unknown error occurred',
       };
     }
   },

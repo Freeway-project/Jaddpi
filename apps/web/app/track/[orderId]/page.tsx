@@ -93,11 +93,19 @@ export default function TrackOrderPage() {
       }
 
       setError(null);
-    } catch (err: any) {
-      console.error('Error fetching tracking info:', err);
-      setError(err?.response?.data?.message || 'Failed to load tracking information');
-      if (showLoader) {
-        toast.error('Failed to load tracking information');
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error('Error fetching tracking info:', err);
+        setError((err as any).response?.data?.message || 'Failed to load tracking information');
+        if (showLoader) {
+          toast.error('Failed to load tracking information');
+        }
+      } else {
+        console.error('An unknown error occurred:', err);
+        setError('An unknown error occurred');
+        if (showLoader) {
+          toast.error('An unknown error occurred');
+        }
       }
     } finally {
       setIsLoading(false);

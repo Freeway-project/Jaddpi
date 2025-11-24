@@ -13,6 +13,16 @@ interface Location {
   lng: number;
 }
 
+type AdditionalData = {
+  pickupAddress: string;
+  dropoffAddress: string;
+  pickupLat: number;
+  pickupLng: number;
+  dropoffLat: number;
+  dropoffLng: number;
+  packageSize: string;
+};
+
 export default function SearchPage() {
   const router = useRouter();
   const [pickupLocation, setPickupLocation] = useState<Location | undefined>();
@@ -34,7 +44,7 @@ export default function SearchPage() {
     navigateToBooking(estimateData, additionalData);
   };
 
-  const navigateToBooking = (estimateData: FareEstimateResponse, additionalData: any) => {
+  const navigateToBooking = (estimateData: FareEstimateResponse, additionalData: AdditionalData) => {
     // Navigate to booking page with required data
     const fare = estimateData.data.fare;
     const params = new URLSearchParams({

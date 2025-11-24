@@ -30,9 +30,14 @@ export default function ProfilePage() {
       setIsLoading(true);
       const data = await userAPI.getProfile();
       setProfile(data);
-    } catch (error: any) {
-      console.error('Failed to fetch profile:', error);
-      toast.error('Failed to load profile');
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error('Failed to fetch profile:', error);
+        toast.error('Failed to load profile');
+      } else {
+        console.error('An unknown error occurred:', error);
+        toast.error('An unknown error occurred');
+      }
     } finally {
       setIsLoading(false);
     }
