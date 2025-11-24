@@ -738,8 +738,8 @@ export default function TrackOrderPage() {
             </button>
             <img
               src={selectedImage.url}
-              alt={selectedImage.title}
-              className="w-full rounded-lg"
+              alt="Selected Item"
+              className="w-full h-auto rounded-lg"
             />
             <p className="text-white text-center mt-4 text-sm font-medium">{selectedImage.title}</p>
           </div>

@@ -438,7 +438,7 @@ export default function DriverDashboardPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs text-green-700 font-medium">Your Earnings</p>
-                <p className="text-2xl font-bold text-green-900">₹{(order.payment.driverEarnings / 100).toFixed(2)}</p>
+                <p className="text-2xl font-bold text-green-900">CAD{(order.payment.driverEarnings / 100).toFixed(2)}</p>
               </div>
               <div className="w-12 h-12 rounded-full bg-green-600 flex items-center justify-center">
                 <CheckCircle className="w-6 h-6 text-white" />

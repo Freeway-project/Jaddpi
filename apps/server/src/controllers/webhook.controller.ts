@@ -169,7 +169,7 @@ async function handlePaymentIntentSucceeded(event: Stripe.Event) {
         drivers.map(driver =>
           sendDriverNotification(driver._id.toString(), {
             title: "New Delivery Request",
-            body: `New order ${order.orderId}. From ${order.pickup?.address || 'Pickup'} to ${order.dropoff?.address || 'Dropoff'}. ₹${order.pricing?.total?.toFixed(2) || '0'}`,
+            body: `New order ${order.orderId}. From ${order.pickup?.address || 'Pickup'} to ${order.dropoff?.address || 'Dropoff'}. CAD${order.pricing?.total?.toFixed(2) || '0'}`,
             url: "/driver",
             data: {
               orderId: order.orderId,

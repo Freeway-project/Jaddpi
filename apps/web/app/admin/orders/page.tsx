@@ -416,6 +416,14 @@ export default function OrdersPage() {
               <img src={selectedOrder.dropoff?.photoUrl || '/placeholder.png'} alt="Dropoff" className="w-32 h-32 object-cover mt-2" />
             </div>
             <div>
+              <strong>Item Photo:</strong>
+              <img
+                src={selectedOrder.package?.itemPhotoUrl}
+                alt="Item Photo"
+                className="w-full h-auto rounded-lg mt-2"
+              />
+            </div>
+            <div>
               <strong>Description:</strong> {selectedOrder.description || 'No description available'}
             </div>
             <div>
