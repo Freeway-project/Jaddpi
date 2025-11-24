@@ -81,6 +81,14 @@ export default function Footer() {
                   Contact us
                 </Link>
               </p>
+                  <p className="text-gray-500">
+                <Link
+                  href="/driver"
+                  className="text-blue-400 hover:underline"
+                >
+                  Driver Page
+                </Link>
+              </p>
             </div>
           </div>
         </div>
