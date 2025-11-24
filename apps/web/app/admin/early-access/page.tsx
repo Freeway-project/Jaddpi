@@ -1,29 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { adminAPI } from '../../../lib/api/admin';
+import { adminAPI, EarlyAccessRequest } from '../../../lib/api/admin';
 import { Button } from '@workspace/ui/components/button';
 
 import { Phone, Mail, MapPin, Calendar, Loader2, Badge } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-interface EarlyAccessRequest {
-  _id: string;
-  pickupAddress: string;
-  dropoffAddress: string;
-  contactName: string;
-  contactPhone: string;
-  contactEmail?: string;
-  estimatedFare?: {
-    distance?: number;
-    total?: number;
-    currency?: string;
-  };
-  notes?: string;
-  status: 'pending' | 'contacted' | 'completed' | 'cancelled';
-  createdAt: string;
-  updatedAt: string;
-}
 
 export default function EarlyAccessPage() {
   const [requests, setRequests] = useState<EarlyAccessRequest[]>([]);
@@ -40,7 +23,7 @@ export default function EarlyAccessPage() {
     try {
       const filters = selectedStatus !== 'all' ? { status: selectedStatus } : {};
       const response = await adminAPI.getEarlyAccessRequests(filters);
-      setRequests(response?.data?.requests || []);
+      setRequests(response?.data || []);
     } catch (error) {
       console.error('Failed to fetch early access requests:', error);
       toast.error('Failed to load requests');

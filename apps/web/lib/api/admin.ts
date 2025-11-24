@@ -234,10 +234,21 @@ export interface CreateCouponData {
 
 export interface EarlyAccessRequest {
   _id: string;
-  name: string;
-  email: string;
-  userType: 'individual' | 'business';
-  status: 'pending' | 'approved' | 'rejected';
+  name?: string; // Original property
+  email?: string; // Original property
+  userType?: 'individual' | 'business'; // Original property
+  pickupAddress: string;
+  dropoffAddress: string;
+  contactName: string;
+  contactPhone: string;
+  contactEmail?: string;
+  estimatedFare?: {
+    distance?: number;
+    total?: number;
+    currency?: string;
+  };
+  notes?: string;
+  status: 'pending' | 'contacted' | 'completed' | 'cancelled'; // Updated status enum
   createdAt: string;
   updatedAt: string;
 }
