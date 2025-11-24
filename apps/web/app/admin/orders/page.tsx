@@ -3,13 +3,30 @@
 import { useState, useEffect } from 'react';
 import { adminAPI, Order } from '../../../lib/api/admin';
 import { Input } from '@workspace/ui/components/input';
-import { Package, Search, CheckCircle, Clock, XCircle, MapPin, User, DollarSign, ArrowUpDown, ArrowUp, ArrowDown, FileText, Image as ImageIcon, X } from 'lucide-react';
+import { Package, Search, CheckCircle, Clock, XCircle, MapPin, User, DollarSign, ArrowUpDown, ArrowUp, ArrowDown, FileText } from 'lucide-react';
 
-type SortField = 'createdAt' | 'orderId' | 'total' | 'status';
-type SortOrder = 'asc' | 'desc';
+const Modal = ({ isOpen, onClose, children }: { isOpen: boolean; onClose: () => void; children: React.ReactNode }) => {
+  if (!isOpen) return null;
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+      <div className="bg-white p-4 rounded shadow-lg max-w-md w-full">
+        <button className="absolute top-2 right-2 text-gray-500" onClick={onClose}>X</button>
+        {children}
+      </div>
+    </div>
+  );
+};
+
+interface ExtendedOrder extends Order {
+  payment?: {
+    stripeId?: string;
+  };
+  itemImage?: string;
+  description?: string;
+}
 
 export default function OrdersPage() {
-  const [orders, setOrders] = useState<Order[]>([]);
+  const [orders, setOrders] = useState<ExtendedOrder[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('');
@@ -17,7 +34,8 @@ export default function OrdersPage() {
   const [total, setTotal] = useState(0);
   const [sortField, setSortField] = useState<SortField>('createdAt');
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
-  const [selectedImage, setSelectedImage] = useState<{ url: string; title: string; orderId: string } | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<ExtendedOrder | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     loadOrders();
@@ -128,6 +146,16 @@ export default function OrdersPage() {
     return 0;
   });
 
+  const openModal = (order: ExtendedOrder) => {
+    setSelectedOrder(order);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setSelectedOrder(null);
+    setIsModalOpen(false);
+  };
+
   return (
     <div className="p-4 sm:p-6 lg:p-8 space-y-6">
       {/* Header */}
@@ -207,7 +235,6 @@ export default function OrdersPage() {
                       {getSortIcon('orderId')}
                     </div>
                   </th>
-                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase hidden md:table-cell">Item Photo</th>
                   <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Customer</th>
                   <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase hidden lg:table-cell">Route</th>
                   <th
@@ -241,6 +268,9 @@ export default function OrdersPage() {
                   <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase hidden 2xl:table-cell">
                     Notes
                   </th>
+                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
@@ -253,34 +283,9 @@ export default function OrdersPage() {
                           Driver: {order.driver.profile?.name}
                         </div>
                       )}
-                    </td>
-                    <td className="px-4 sm:px-6 py-4 hidden md:table-cell">
-                      {order.package?.itemPhotoUrl ? (
-                        <button
-                          onClick={() => setSelectedImage({
-                            url: order.package.itemPhotoUrl!,
-                            title: 'Package Item',
-                            orderId: order.orderId
-                          })}
-                          className="relative group"
-                        >
-                          <img
-                            src={order.package.itemPhotoUrl}
-                            alt="Item"
-                            className="w-12 h-12 object-cover rounded border-2 border-gray-200 group-hover:border-blue-500 transition-colors"
-                          />
-                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors rounded flex items-center justify-center">
-                            <ImageIcon className="w-4 h-4 text-white opacity-0 group-hover:opacity-100" />
-                          </div>
-                        </button>
-                      ) : (
-                        <div className="w-12 h-12 bg-gray-100 rounded border-2 border-dashed border-gray-300 flex items-center justify-center">
-                          <Package className="w-4 h-4 text-gray-400" />
-                        </div>
-                      )}
-                      {order.package?.itemPrice && (
-                        <div className="text-xs text-gray-600 mt-1">
-                          ${(order.package.itemPrice / 100).toFixed(2)}
+                      {order.payment?.stripeId && (
+                        <div className="text-xs text-gray-500 mt-1">
+                          Stripe ID: {order.payment.stripeId}
                         </div>
                       )}
                     </td>
@@ -346,6 +351,14 @@ export default function OrdersPage() {
                         )}
                       </div>
                     </td>
+                    <td className="px-4 sm:px-6 py-4">
+                      <button
+                        className="text-blue-600 hover:underline"
+                        onClick={() => openModal(order)}
+                      >
+                        Info
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -354,29 +367,34 @@ export default function OrdersPage() {
         )}
       </div>
 
-      {/* Full Screen Image Modal */}
-      {selectedImage && (
-        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4" onClick={() => setSelectedImage(null)}>
-          <div className="relative max-w-3xl w-full" onClick={(e) => e.stopPropagation()}>
-            <button
-              onClick={() => setSelectedImage(null)}
-              className="absolute -top-10 right-0 bg-white/90 hover:bg-white p-2 rounded-full transition-colors"
-            >
-              <X className="w-5 h-5 text-gray-900" />
-            </button>
-            <div className="bg-white rounded-lg p-4">
-              <div className="mb-3">
-                <h3 className="text-lg font-semibold text-gray-900">{selectedImage.title}</h3>
-                <p className="text-sm text-gray-600">Order: {selectedImage.orderId}</p>
+      {/* Modal for displaying order details */}
+      {selectedOrder && (
+        <Modal isOpen={isModalOpen} onClose={closeModal}>
+          <div className="p-4">
+            <h3 className="text-lg font-semibold mb-4">Order Details</h3>
+            <div className="space-y-2">
+              <div>
+                <strong>Item Image:</strong>
+                <img src={selectedOrder.itemImage || '/placeholder.png'} alt="Item" className="w-32 h-32 object-cover mt-2" />
               </div>
-              <img
-                src={selectedImage.url}
-                alt={selectedImage.title}
-                className="w-full rounded-lg"
-              />
+              <div>
+                <strong>Description:</strong> {selectedOrder.description || 'No description available'}
+              </div>
+              <div>
+                <strong>Driver:</strong> {selectedOrder.driver?.profile?.name || 'N/A'}
+              </div>
+              <div>
+                <strong>Pickup Address:</strong> {selectedOrder.pickup?.address || 'N/A'}
+              </div>
+              <div>
+                <strong>Dropoff Address:</strong> {selectedOrder.dropoff?.address || 'N/A'}
+              </div>
+              <div>
+                <strong>Total Amount:</strong> ${((selectedOrder.pricing?.total || 0) / 100).toFixed(2)}
+              </div>
             </div>
           </div>
-        </div>
+        </Modal>
       )}
     </div>
   );

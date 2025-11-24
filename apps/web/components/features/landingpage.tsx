@@ -52,11 +52,11 @@ export default function JaddpiLanding() {
           <BaseAnimation animationFile="global-delivery.json" width={150} height={150} className="mx-auto mb-4 sm:w-[200px] sm:h-[200px] md:w-[250px] md:h-[250px]" />
 
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight px-2">
-            Scheduled parcel delivery in Surrey and Langley.
+            Real-Time Parcel Delivery in Surrey & Langley, BC
           </h1>
 
           <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-6 sm:mb-8 px-4">
-            Create an order in minutes.  Live tracking 
+            Ship parcels with live GPS tracking. Fast, reliable local courier service for anyone. Create orders in minutes.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
@@ -86,8 +86,8 @@ export default function JaddpiLanding() {
                 <MapPin className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600" />
               </div>
               <div>
-                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">Track Your Delivery</h2>
-                <p className="text-sm sm:text-base text-gray-600 mt-1">Enter your order ID to see real-time tracking</p>
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">Track Your Parcel in Real-Time</h2>
+                <p className="text-sm sm:text-base text-gray-600 mt-1">Live GPS tracking for Surrey & Langley deliveries - Enter your order ID</p>
               </div>
             </div>
 
@@ -221,7 +221,7 @@ export default function JaddpiLanding() {
       {/* How It Works */}
       <section id="how-it-works" className="bg-blue-50 py-12 sm:py-16 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 text-center mb-8 sm:mb-12">How it works</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 text-center mb-8 sm:mb-12">How Our Real-Time Delivery Works</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
             <div className="bg-white p-6 sm:p-8 rounded-xl shadow-sm">

@@ -30,11 +30,28 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://jaddpi.com'),
   title: {
-    default: 'Jaddpi - Fast & Reliable Delivery Service',
-    template: '%s | Jaddpi'
+    default: 'Jaddpi - Real-Time Parcel Delivery in Surrey & Langley BC',
+    template: '%s | Jaddpi Delivery'
   },
-  description: 'Professional courier and delivery service. Track your packages in real-time with our fast, reliable, and eco-friendly delivery solutions.',
-  keywords: ['delivery', 'courier', 'shipping', 'logistics', 'tracking', 'fast delivery', 'same-day delivery'],
+  description: 'Ship parcels with real-time tracking in Surrey and Langley, BC. Fast, reliable local delivery service for anyone. Door-to-door courier with live tracking and instant quotes.',
+  keywords: [
+    'parcel delivery Surrey BC',
+    'parcel delivery Langley BC',
+    'courier Surrey',
+    'courier Langley',
+    'real-time tracking',
+    'live tracking delivery',
+    'local delivery Surrey',
+    'local delivery Langley',
+    'same-day delivery',
+    'door-to-door delivery',
+    'British Columbia delivery',
+    'BC courier service',
+    'package shipping Surrey',
+    'package shipping Langley',
+    'fast delivery BC',
+    'on-demand delivery'
+  ],
   authors: [{ name: 'Jaddpi' }],
   creator: 'Jaddpi',
   publisher: 'Jaddpi',
@@ -45,24 +62,24 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: 'website',
-    locale: 'en_US',
+    locale: 'en_CA',
     url: '/',
     siteName: 'Jaddpi',
-    title: 'Jaddpi - Fast & Reliable Delivery Service',
-    description: 'Professional courier and delivery service. Track your packages in real-time.',
+    title: 'Jaddpi - Real-Time Parcel Delivery in Surrey & Langley BC',
+    description: 'Ship parcels with real-time tracking in Surrey and Langley, BC. Fast, reliable local delivery service for anyone.',
     images: [
       {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'Jaddpi Delivery Service',
+        alt: 'Jaddpi - Real-Time Parcel Delivery in Surrey & Langley BC',
       }
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Jaddpi - Fast & Reliable Delivery Service',
-    description: 'Professional courier and delivery service. Track your packages in real-time.',
+    title: 'Jaddpi - Real-Time Parcel Delivery in Surrey & Langley BC',
+    description: 'Ship parcels with real-time tracking in Surrey and Langley, BC. Fast, reliable local delivery service.',
     images: ['/og-image.png'],
   },
   robots: {
@@ -94,8 +111,91 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "@id": "https://jaddpi.com",
+    "name": "Jaddpi",
+    "description": "Real-time parcel delivery service in Surrey and Langley, BC. Fast, reliable door-to-door courier with live tracking.",
+    "url": "https://jaddpi.com",
+    "telephone": "+1-236-339-7355",
+    "priceRange": "$$",
+    "image": "https://jaddpi.com/logo.png",
+    "logo": "https://jaddpi.com/logo.png",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Surrey",
+      "addressRegion": "BC",
+      "addressCountry": "CA"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": "49.1913",
+      "longitude": "-122.8490"
+    },
+    "areaServed": [
+      {
+        "@type": "City",
+        "name": "Surrey",
+        "containedInPlace": {
+          "@type": "AdministrativeArea",
+          "name": "British Columbia"
+        }
+      },
+      {
+        "@type": "City",
+        "name": "Langley",
+        "containedInPlace": {
+          "@type": "AdministrativeArea",
+          "name": "British Columbia"
+        }
+      }
+    ],
+    "serviceType": [
+      "Parcel Delivery",
+      "Courier Service",
+      "Real-Time Tracking",
+      "Door-to-Door Delivery",
+      "Local Delivery"
+    ],
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Delivery Services",
+      "itemListElement": [
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Real-Time Parcel Delivery",
+            "description": "Fast parcel delivery with live GPS tracking in Surrey and Langley, BC"
+          }
+        }
+      ]
+    },
+    "openingHoursSpecification": {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday"
+      ],
+      "opens": "08:00",
+      "closes": "20:00"
+    }
+  };
+
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        />
+      </head>
       <body
         className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased flex flex-col min-h-screen`}
         suppressHydrationWarning
