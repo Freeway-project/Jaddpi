@@ -179,19 +179,22 @@ export default function DriverDashboardPage() {
         console.log('✅ Completed orders:', completedOrders);
         setOrders(completedOrders);
       }
-    } catch (error: any) {
-      console.error('Failed to fetch orders:', error);
-
-      // Handle auth errors
-      if (error?.response?.status === 401 || error?.response?.status === 403) {
-        toast.error('Session expired. Please login again');
-        router.push('/driver/login');
-        return;
-      }
-
-      // Only show error toast on initial load, not during background polling
-      if (showLoader) {
-        toast.error('Failed to load orders');
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error('Failed to fetch orders:', error);
+        if ((error as any).response?.status === 401 || (error as any).response?.status === 403) {
+          toast.error('Session expired. Please login again');
+          router.push('/driver/login');
+          return;
+        }
+        if (showLoader) {
+          toast.error('Failed to load orders');
+        }
+      } else {
+        console.error('An unknown error occurred:', error);
+        if (showLoader) {
+          toast.error('An unknown error occurred');
+        }
       }
     } finally {
       setIsInitialLoading(false);
@@ -217,9 +220,14 @@ export default function DriverDashboardPage() {
       toast.success('Order accepted');
       // Switch to In Progress tab automatically
       setActiveStatus('in_progress');
-    } catch (error: any) {
-      console.error('Failed to accept order:', error);
-      toast.error(error?.response?.data?.message || 'Failed to accept order');
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error('Failed to accept order:', error);
+        toast.error((error as any).response?.data?.message || 'Failed to accept order');
+      } else {
+        console.error('An unknown error occurred:', error);
+        toast.error('An unknown error occurred');
+      }
     } finally {
       setActionLoading(null);
     }
@@ -234,9 +242,14 @@ export default function DriverDashboardPage() {
       // If order is completed (delivered), it should be removed from in-progress
       // Silent refresh will handle this automatically
       fetchOrders(false);
-    } catch (error: any) {
-      console.error('Failed to update status:', error);
-      toast.error(error?.response?.data?.message || 'Failed to update status');
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error('Failed to update status:', error);
+        toast.error((error as any).response?.data?.message || 'Failed to update status');
+      } else {
+        console.error('An unknown error occurred:', error);
+        toast.error('An unknown error occurred');
+      }
     } finally {
       setActionLoading(null);
     }
@@ -261,9 +274,14 @@ export default function DriverDashboardPage() {
 
       // Refresh orders to get updated photo URLs
       fetchOrders(false);
-    } catch (error: any) {
-      console.error('Failed to upload photo:', error);
-      toast.error(error?.response?.data?.message || 'Failed to upload photo');
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error('Failed to upload photo:', error);
+        toast.error((error as any).response?.data?.message || 'Failed to upload photo');
+      } else {
+        console.error('An unknown error occurred:', error);
+        toast.error('An unknown error occurred');
+      }
     } finally {
       setIsUploadingPhoto(false);
     }
@@ -709,7 +727,15 @@ export default function DriverDashboardPage() {
                       try {
                         const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3006/api';
                         // If we have a token, remove that specific token; otherwise clear all
-                        const body: any = { driverId: user?._id || user?.id };
+type FcmTokenRequestBody = {
+  driverId: string;
+  token?: string;
+  all?: boolean;
+};
+
+// ...
+
+                        const body: FcmTokenRequestBody = { driverId: user?._id || user?.id };
                         if (fcmToken) body.token = fcmToken;
                         else body.all = true;
 
@@ -721,7 +747,7 @@ export default function DriverDashboardPage() {
 
                         // Attempt to delete token client-side if messaging available
                         try {
-                          if (typeof window !== 'undefined' && (window as any).navigator?.serviceWorker && fcmToken) {
+                          if (typeof window !== 'undefined' && (window as Window & typeof globalThis & { navigator: { serviceWorker: any } }).navigator?.serviceWorker && fcmToken) {
                             const { deleteToken } = await import('firebase/messaging');
                             const { messaging } = await import('../../lib/utils/firebaseConfig');
                             if (messaging) {

@@ -43,9 +43,14 @@ function DashboardContent() {
       setIsLoading(true);
       const response = await userAPI.getDashboard();
       setDashboardData(response.data);
-    } catch (error: any) {
-      console.error('Failed to fetch dashboard data:', error);
-      toast.error('Failed to load dashboard');
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error('Failed to fetch dashboard data:', error);
+        toast.error('Failed to load dashboard');
+      } else {
+        console.error('An unknown error occurred:', error);
+        toast.error('An unknown error occurred');
+      }
     } finally {
       setIsLoading(false);
     }

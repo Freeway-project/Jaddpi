@@ -11,6 +11,12 @@ import toast from 'react-hot-toast';
 
 type Tab = 'overview' | 'orders' | 'users';
 
+type Filters = {
+  limit: number;
+  status?: string;
+  search?: string;
+};
+
 export default function AdminDashboard() {
   const router = useRouter();
   const { logout } = useAuthStore();
@@ -70,7 +76,7 @@ export default function AdminDashboard() {
   const loadAllOrders = async () => {
     setOrdersLoading(true);
     try {
-      const filters: any = { limit: 100 };
+      const filters: Filters = { limit: 100 };
       if (statusFilter !== 'all') filters.status = statusFilter;
       if (searchQuery) filters.search = searchQuery;
 
@@ -87,7 +93,7 @@ export default function AdminDashboard() {
   const loadAllUsers = async () => {
     setUsersLoading(true);
     try {
-      const filters: any = { limit: 100 };
+      const filters: Filters = { limit: 100 };
       if (statusFilter !== 'all') filters.status = statusFilter;
       if (searchQuery) filters.search = searchQuery;
 
@@ -335,7 +341,13 @@ function OverviewTab({ stats, activities, orders, metrics }: {
   );
 }
 
-function StatCard({ title, value, subtitle, icon: Icon, color }: any) {
+function StatCard({ title, value, subtitle, icon: Icon, color }: {
+  title: string;
+  value: string | number;
+  subtitle: string;
+  icon: React.ElementType;
+  color: string;
+}) {
   const colorClasses = {
     blue: 'bg-blue-500',
     green: 'bg-green-500',

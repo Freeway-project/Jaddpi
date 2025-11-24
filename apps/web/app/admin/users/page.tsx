@@ -49,7 +49,7 @@ export default function UsersPage() {
   };
 
   const getAccountTypeBadge = (type: string) => {
-    const styles: Record<string, { bg: string; text: string; icon: any }> = {
+    const styles: Record<string, { bg: string; text: string; icon: React.ElementType }> = {
       individual: { bg: 'bg-blue-100', text: 'text-blue-800', icon: UserIcon },
       business: { bg: 'bg-purple-100', text: 'text-purple-800', icon: Building2 },
     };

@@ -40,10 +40,16 @@ function BookingSuccessContent() {
           // Invoice might not be available yet if payment is still processing
           console.log('Invoice not available yet:', invoiceError);
         }
-      } catch (err: any) {
-        console.error('Error fetching order:', err);
-        setError(err?.response?.data?.message || 'Failed to load order details');
-        toast.error('Failed to load order details');
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          console.error('Error fetching order:', err);
+          setError(err.message || 'Failed to load order details');
+          toast.error('Failed to load order details');
+        } else {
+          console.error('An unknown error occurred:', err);
+          setError('An unknown error occurred');
+          toast.error('An unknown error occurred');
+        }
       } finally {
         setIsLoading(false);
       }

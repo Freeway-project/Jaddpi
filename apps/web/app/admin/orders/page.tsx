@@ -83,7 +83,7 @@ export default function OrdersPage() {
   };
 
   const getStatusBadge = (status: string) => {
-    const styles: Record<string, { bg: string; text: string; icon: any }> = {
+    const styles: Record<string, { bg: string; text: string; icon: React.ElementType }> = {
       pending: { bg: 'bg-yellow-100', text: 'text-yellow-800', icon: Clock },
       confirmed: { bg: 'bg-blue-100', text: 'text-blue-800', icon: CheckCircle },
       'driver-assigned': { bg: 'bg-purple-100', text: 'text-purple-800', icon: User },
@@ -140,8 +140,8 @@ export default function OrdersPage() {
   };
 
   const sortedOrders = [...orders].sort((a, b) => {
-    let compareA: any;
-    let compareB: any;
+    let compareA: string | number;
+    let compareB: string | number;
 
     switch (sortField) {
       case 'createdAt':

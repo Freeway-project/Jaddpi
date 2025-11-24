@@ -27,9 +27,14 @@ export default function AdminLoginPage() {
 
       // Use router.replace instead of push to prevent going back to login
       router.replace('/admin/dashboard');
-    } catch (err: any) {
-      console.error('Login error:', err);
-      setError(err.message || 'Invalid email or password');
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error('Login error:', err);
+        setError(err.message || 'Invalid email or password');
+      } else {
+        console.error('An unknown error occurred:', err);
+        setError('An unknown error occurred');
+      }
     } finally {
       setIsLoading(false);
     }

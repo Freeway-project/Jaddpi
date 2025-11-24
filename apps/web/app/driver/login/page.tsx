@@ -42,9 +42,13 @@ export default function DriverLoginPage() {
       } else {
         toast.error('Login failed');
       }
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || 'Invalid credentials';
-      toast.error(errorMessage);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        const errorMessage = (error as any).response?.data?.message || error.message || 'Invalid credentials';
+        toast.error(errorMessage);
+      } else {
+        toast.error('An unknown error occurred');
+      }
     } finally {
       setIsLoading(false);
     }

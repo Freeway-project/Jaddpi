@@ -6,6 +6,7 @@ import { Button } from '@workspace/ui/components/button';
 import { Input } from '@workspace/ui/components/input';
 import { Label } from '@workspace/ui/components/label';
 import { Plus, Tag, Calendar, Users, DollarSign } from 'lucide-react';
+import axios from 'axios';
 
 export default function CouponsPage() {
   const [coupons, setCoupons] = useState<Coupon[]>([]);
@@ -86,8 +87,12 @@ export default function CouponsPage() {
       });
       setShowCreateForm(false);
       loadCoupons();
-    } catch (error: any) {
-      alert(error?.response?.data?.message || 'Failed to create coupon');
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        alert(error.response?.data?.message || 'Failed to create coupon');
+      } else {
+        alert('An unknown error occurred');
+      }
     } finally {
       setIsCreating(false);
     }
@@ -153,7 +158,7 @@ export default function CouponsPage() {
                 <Label>Discount Type *</Label>
                 <select
                   value={formData.discountType}
-                  onChange={(e) => setFormData({ ...formData, discountType: e.target.value as any })}
+                  onChange={(e) => setFormData({ ...formData, discountType: e.target.value as 'percentage_discount' | 'fixed_discount' | 'eliminate_fee' })}
                   className="mt-1 w-full h-10 px-3 border border-gray-200 rounded-md text-sm focus:border-blue-600 focus:ring-0"
                   required
                 >

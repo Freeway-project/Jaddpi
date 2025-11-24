@@ -20,9 +20,14 @@ export default function SmsUsagePage() {
       setError(null);
       const data = await adminAPI.getSmsUsage();
       setSmsStats(data);
-    } catch (err: any) {
-      console.error('Failed to load SMS usage data:', err);
-      setError(err?.message || 'Failed to load SMS usage data');
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error('Failed to load SMS usage data:', err);
+        setError(err.message || 'Failed to load SMS usage data');
+      } else {
+        console.error('An unknown error occurred:', err);
+        setError('An unknown error occurred');
+      }
     } finally {
       setLoading(false);
     }
@@ -201,7 +206,7 @@ interface UsageCardProps {
   current: number;
   limit: number;
   percentage: number;
-  icon: any;
+  icon: React.ElementType;
   color: 'blue' | 'green' | 'purple';
 }
 
