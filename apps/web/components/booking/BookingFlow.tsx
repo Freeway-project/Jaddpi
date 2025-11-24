@@ -124,6 +124,7 @@ export default function BookingFlow({
     newTotal: number;
   } | null>(null);
   const [itemPhoto, setItemPhoto] = useState<string>(''); // base64
+  const [itemPhotoUrl, setItemPhotoUrl] = useState<string>(''); // Cloudinary URL
   const [itemPrice, setItemPrice] = useState<string>('');
   const [orderId, setOrderId] = useState<string | null>(null);
   const [isCreatingOrder, setIsCreatingOrder] = useState(false);
@@ -203,7 +204,7 @@ export default function BookingFlow({
       return recipient.name && recipient.phone && recipient.address;
     }
     if (currentStep === 'review') {
-      return !!itemPhoto; // Item photo is mandatory (base64)
+      return !!itemPhoto; // Item photo is mandatory (base64 or URL)
     }
     return true;
   };
@@ -227,7 +228,8 @@ export default function BookingFlow({
         package: {
           size: initialPackageSize,
           description: recipient.notes || sender.notes,
-          itemPhoto: itemPhoto, // Send base64 - will be uploaded by backend
+          itemPhoto: itemPhoto, // Send base64 as fallback
+          itemPhotoUrl: itemPhotoUrl, // Send URL if available
           itemPrice: itemPrice ? Math.round(parseFloat(itemPrice) * 100) : undefined, // Convert to cents
         },
         pricing: estimate.data.fare,
@@ -272,15 +274,15 @@ export default function BookingFlow({
   // Create a modified estimate with coupon discount applied
   const finalEstimate: FareEstimateResponse = appliedCoupon
     ? {
-        ...estimate,
-        data: {
-          ...estimate.data,
-          fare: {
-            ...estimate.data.fare,
-            total: appliedCoupon.newTotal,
-          },
+      ...estimate,
+      data: {
+        ...estimate.data,
+        fare: {
+          ...estimate.data.fare,
+          total: appliedCoupon.newTotal,
         },
-      }
+      },
+    }
     : estimate;
 
   return (
@@ -332,8 +334,8 @@ export default function BookingFlow({
             <div className="flex items-center justify-between text-xs">
               <span className="font-semibold text-gray-900">
                 {currentStep === 'sender' ? 'Pickup Details' :
-                 currentStep === 'recipient' ? 'Delivery Details' :
-                 currentStep === 'review' ? 'Review Order' : 'Payment'}
+                  currentStep === 'recipient' ? 'Delivery Details' :
+                    currentStep === 'review' ? 'Review Order' : 'Payment'}
               </span>
               <span className="text-gray-600">
                 {steps.findIndex(s => s.id === currentStep) + 1}/{steps.length}
@@ -343,11 +345,10 @@ export default function BookingFlow({
               {steps.map((step, index) => (
                 <div
                   key={step.id}
-                  className={`h-0.5 flex-1 rounded-full transition-all ${
-                    steps.findIndex(s => s.id === currentStep) >= index
-                      ? 'bg-black'
-                      : 'bg-gray-300'
-                  }`}
+                  className={`h-0.5 flex-1 rounded-full transition-all ${steps.findIndex(s => s.id === currentStep) >= index
+                    ? 'bg-black'
+                    : 'bg-gray-300'
+                    }`}
                 />
               ))}
             </div>
@@ -379,7 +380,7 @@ export default function BookingFlow({
         {/* Form Section - Bottom 60% (Uber-style rounded top) */}
         <div className="flex-1 flex flex-col bg-gray-50 rounded-t-3xl -mt-4 relative z-10 shadow-2xl min-h-0">
           {/* Scrollable Content */}
-          <div className="flex-1 overflow-y-auto px-4 pt-6 pb-2 min-h-0">
+          <div className="flex-1 overflow-y-auto px-4 pt-6 pb-24 min-h-0">
             <div className="pb-4">
               {currentStep === 'sender' && (
                 <UserInfoForm
@@ -411,7 +412,10 @@ export default function BookingFlow({
                   appliedCoupon={appliedCoupon}
                   onCouponApplied={handleCouponApplied}
                   itemPhoto={itemPhoto}
-                  onItemPhotoSelected={setItemPhoto}
+                  onItemPhotoSelected={(data) => {
+                    setItemPhoto(data.base64);
+                    if (data.url) setItemPhotoUrl(data.url);
+                  }}
                   itemPrice={itemPrice}
                   onItemPriceChanged={setItemPrice}
                 />
@@ -458,10 +462,10 @@ export default function BookingFlow({
                 {currentStep === 'review' && isCreatingOrder
                   ? 'Creating Order...'
                   : currentStep === 'review'
-                  ? 'Continue to Payment'
-                  : currentStep === 'payment'
-                  ? 'Processing...'
-                  : 'Continue'}
+                    ? 'Continue to Payment'
+                    : currentStep === 'payment'
+                      ? 'Processing...'
+                      : 'Continue'}
               </Button>
             </div>
           </div>
@@ -553,7 +557,10 @@ export default function BookingFlow({
                   appliedCoupon={appliedCoupon}
                   onCouponApplied={handleCouponApplied}
                   itemPhoto={itemPhoto}
-                  onItemPhotoSelected={setItemPhoto}
+                  onItemPhotoSelected={(data) => {
+                    setItemPhoto(data.base64);
+                    if (data.url) setItemPhotoUrl(data.url);
+                  }}
                   itemPrice={itemPrice}
                   onItemPriceChanged={setItemPrice}
                 />
@@ -598,10 +605,10 @@ export default function BookingFlow({
                 {currentStep === 'review' && isCreatingOrder
                   ? 'Creating Order...'
                   : currentStep === 'review'
-                  ? 'Continue to Payment'
-                  : currentStep === 'payment'
-                  ? 'Processing...'
-                  : 'Continue'}
+                    ? 'Continue to Payment'
+                    : currentStep === 'payment'
+                      ? 'Processing...'
+                      : 'Continue'}
               </Button>
             </div>
           </div>

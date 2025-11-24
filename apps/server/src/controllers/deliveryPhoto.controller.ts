@@ -196,4 +196,56 @@ export class DeliveryPhotoController {
       });
     }
   }
+  /**
+   * Upload temporary photo (for order creation)
+   * POST /api/delivery/upload-temp-photo
+   */
+  static async uploadTempPhoto(req: Request, res: Response) {
+    try {
+      const { photo } = req.body; // Base64 encoded image
+      const user = (req as any).user;
+
+      if (!photo) {
+        throw new ApiError(400, "Photo is required");
+      }
+
+      // Validate base64 photo data
+      if (typeof photo !== 'string' || photo.trim().length === 0) {
+        throw new ApiError(400, "Invalid photo data provided");
+      }
+
+      // Upload to Cloudinary (temp folder)
+      const uploadResult = await uploadBase64ToCloudinary(photo, {
+        folder: `temp-photos/${user._id}`,
+        resource_type: "image",
+        quality: "auto",
+        width: 800,
+        crop: "limit"
+      });
+
+      logger.info({
+        userId: user._id.toString(),
+        photoUrl: uploadResult.secure_url,
+        cloudinaryPublicId: uploadResult.public_id
+      }, "DeliveryPhotoController.uploadTempPhoto - Temp photo uploaded successfully");
+
+      res.json({
+        success: true,
+        data: {
+          photoUrl: uploadResult.secure_url,
+          publicId: uploadResult.public_id
+        },
+        message: "Photo uploaded successfully"
+      });
+    } catch (error: any) {
+      logger.error({
+        error: error.message,
+        userId: (req as any).user?._id?.toString()
+      }, "DeliveryPhotoController.uploadTempPhoto - Upload temp photo failed");
+      res.status(error.statusCode || 500).json({
+        success: false,
+        message: error.message || "Failed to upload photo"
+      });
+    }
+  }
 }

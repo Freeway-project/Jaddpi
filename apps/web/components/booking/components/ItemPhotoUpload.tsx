@@ -1,18 +1,20 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { Camera, X, CheckCircle2 } from 'lucide-react';
+import { Camera, X, CheckCircle2, Loader2 } from 'lucide-react';
 import { Button } from '@workspace/ui/components/button';
+import { deliveryAPI } from '../../../lib/api/delivery';
 import toast from 'react-hot-toast';
 
 interface ItemPhotoUploadProps {
-  onPhotoSelected: (base64Photo: string) => void;
+  onPhotoSelected: (photoData: { base64: string; url?: string }) => void;
   existingPhoto?: string;
 }
 
 export default function ItemPhotoUpload({ onPhotoSelected, existingPhoto }: ItemPhotoUploadProps) {
   const [photoBase64, setPhotoBase64] = useState<string>(existingPhoto || '');
   const [previewUrl, setPreviewUrl] = useState<string>(existingPhoto || '');
+  const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,12 +36,31 @@ export default function ItemPhotoUpload({ onPhotoSelected, existingPhoto }: Item
     try {
       // Convert to base64
       const reader = new FileReader();
-      reader.onloadend = () => {
+      reader.onloadend = async () => {
         const base64 = reader.result as string;
         setPhotoBase64(base64);
         setPreviewUrl(base64);
-        onPhotoSelected(base64);
-        toast.success('Photo selected successfully!');
+
+        // Start upload immediately
+        setIsUploading(true);
+        try {
+          const response = await deliveryAPI.uploadTempPhoto(base64);
+          if (response.success && response.data.photoUrl) {
+            onPhotoSelected({ base64, url: response.data.photoUrl });
+            toast.success('Photo uploaded successfully!');
+          } else {
+            // Fallback to base64 if upload fails (though backend should handle it)
+            onPhotoSelected({ base64 });
+            toast.error('Failed to upload photo, but we saved it locally.');
+          }
+        } catch (error) {
+          console.error('Upload failed:', error);
+          // Fallback to base64
+          onPhotoSelected({ base64 });
+          toast.error('Photo upload failed. Using local copy.');
+        } finally {
+          setIsUploading(false);
+        }
       };
 
       reader.onerror = () => {
@@ -63,7 +84,7 @@ export default function ItemPhotoUpload({ onPhotoSelected, existingPhoto }: Item
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
-    onPhotoSelected('');
+    onPhotoSelected({ base64: '' });
   };
 
   return (
@@ -78,8 +99,14 @@ export default function ItemPhotoUpload({ onPhotoSelected, existingPhoto }: Item
             <p className="text-xs text-gray-500">Required for verification</p>
           </div>
         </div>
-        {photoBase64 && (
+        {photoBase64 && !isUploading && (
           <CheckCircle2 className="w-5 h-5 text-green-600" />
+        )}
+        {isUploading && (
+          <div className="flex items-center gap-2 text-blue-600 text-xs font-medium">
+            <Loader2 className="w-4 h-4 animate-spin" />
+            <span>Uploading...</span>
+          </div>
         )}
       </div>
 
@@ -93,7 +120,7 @@ export default function ItemPhotoUpload({ onPhotoSelected, existingPhoto }: Item
       />
 
       {!previewUrl ? (
-        <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center bg-gray-50">
+        <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer" onClick={handleCapture}>
           <div className="space-y-3">
             <div className="flex justify-center">
               <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center">
@@ -106,7 +133,7 @@ export default function ItemPhotoUpload({ onPhotoSelected, existingPhoto }: Item
             </div>
             <Button
               type="button"
-              onClick={handleCapture}
+              onClick={(e) => { e.stopPropagation(); handleCapture(); }}
               className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium h-10 text-sm"
             >
               <Camera className="w-4 h-4 mr-2" />
@@ -119,19 +146,31 @@ export default function ItemPhotoUpload({ onPhotoSelected, existingPhoto }: Item
           <img
             src={previewUrl}
             alt="Item preview"
-            className="w-full h-48 object-contain"
+            className={`w-full h-48 object-contain transition-opacity duration-300 ${isUploading ? 'opacity-50' : 'opacity-100'}`}
           />
-          <button
-            onClick={handleRemove}
-            className="absolute top-2 right-2 w-8 h-8 rounded-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center shadow-lg transition-colors"
-            aria-label="Remove photo"
-          >
-            <X className="w-5 h-5" />
-          </button>
-          <div className="absolute bottom-0 left-0 right-0 bg-green-600 text-white px-3 py-2 text-xs font-medium flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4" />
-            Photo ready to upload
-          </div>
+          {!isUploading && (
+            <button
+              onClick={handleRemove}
+              className="absolute top-2 right-2 w-8 h-8 rounded-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center shadow-lg transition-colors"
+              aria-label="Remove photo"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          )}
+          {isUploading && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full flex items-center gap-2 shadow-lg">
+                <Loader2 className="w-5 h-5 text-blue-600 animate-spin" />
+                <span className="text-sm font-medium text-blue-600">Uploading...</span>
+              </div>
+            </div>
+          )}
+          {!isUploading && (
+            <div className="absolute bottom-0 left-0 right-0 bg-green-600 text-white px-3 py-2 text-xs font-medium flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4" />
+              Photo ready
+            </div>
+          )}
         </div>
       )}
 

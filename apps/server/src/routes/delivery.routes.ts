@@ -134,6 +134,12 @@ router.put("/:orderId/upload-pickup-photo", requireAuth, DeliveryPhotoController
 router.put("/:orderId/upload-dropoff-photo", requireAuth, DeliveryPhotoController.uploadDropoffPhoto);
 
 /**
+ * POST /api/delivery/upload-temp-photo
+ * Upload temporary photo for order creation
+ */
+router.post("/upload-temp-photo", requireAuth, DeliveryPhotoController.uploadTempPhoto);
+
+/**
  * POST /api/delivery/create-order
  * Create a new delivery order (with optional coupon)
  */
@@ -270,8 +276,10 @@ router.post("/create-order", requireAuth, async (req: Request, res: Response) =>
     const expiresAt = new Date(now.getTime() + 30 * 60 * 1000); // 30 minutes
 
     // Handle item photo upload if provided
-    let itemPhotoUrl: string | undefined = undefined;
-    if (packageDetails.itemPhoto) {
+    let itemPhotoUrl: string | undefined = packageDetails.itemPhotoUrl; // Accept URL if provided
+
+    // Fallback to base64 upload if no URL but photo data exists (backward compatibility)
+    if (!itemPhotoUrl && packageDetails.itemPhoto) {
       try {
         logger.info({ orderId }, "Uploading item photo to Cloudinary");
         const uploadResult = await uploadBase64ToCloudinary(packageDetails.itemPhoto, {
@@ -449,7 +457,7 @@ router.post("/admin/service-areas", async (req: Request, res: Response) => {
 router.get("/admin/service-areas", async (req: Request, res: Response) => {
   try {
     const { isActive, province, type } = req.query;
-    
+
     const filters: any = {};
     if (isActive !== undefined) filters.isActive = isActive === 'true';
     if (province) filters.province = province as string;
@@ -485,7 +493,7 @@ router.put("/admin/service-areas/:id", async (req: Request, res: Response) => {
     const updates = req.body;
 
     const serviceArea = await CityServiceAreaService.updateServiceArea(id, updates);
-    
+
     if (!serviceArea) {
       throw new ApiError(404, "Service area not found");
     }
