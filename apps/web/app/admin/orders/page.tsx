@@ -25,6 +25,9 @@ interface ExtendedOrder extends Order {
   description?: string;
 }
 
+type SortField = 'createdAt' | 'orderId' | 'total' | 'status';
+type SortOrder = 'asc' | 'desc';
+
 export default function OrdersPage() {
   const [orders, setOrders] = useState<ExtendedOrder[]>([]);
   const [loading, setLoading] = useState(true);
