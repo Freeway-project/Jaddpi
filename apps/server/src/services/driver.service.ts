@@ -48,6 +48,7 @@ export class DriverService {
       paymentStatus: "paid", // Only show paid orders
       expiresAt: { $gt: now } // Only show orders that haven't expired
     })
+      .select('-package.itemPhotoUrl -package.itemPrice') // SECURITY: Hide item photo & value from drivers
       .populate("userId", "uuid profile.name auth.phone")
       .sort({ createdAt: -1 })
       .limit(limit)
@@ -95,6 +96,7 @@ export class DriverService {
     }, 'DriverService.getDriverOrders - Fetching orders');
 
     const orders = await DeliveryOrder.find(query)
+      .select('-package.itemPhotoUrl -package.itemPrice') // SECURITY: Hide item photo & value from drivers
       .populate("userId", "uuid profile.name auth.phone")
       .sort({ createdAt: -1 })
       .limit(limit)
@@ -455,6 +457,7 @@ export class DriverService {
     };
 
     const orders = await DeliveryOrder.find(query)
+      .select('-package.itemPhotoUrl -package.itemPrice') // SECURITY: Hide item photo & value from drivers
       .populate("userId", "uuid profile.name auth.phone")
       .sort({ "timeline.deliveredAt": -1, "timeline.cancelledAt": -1, createdAt: -1 })
       .limit(limit)

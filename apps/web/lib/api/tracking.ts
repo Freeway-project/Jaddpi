@@ -23,6 +23,8 @@ export interface TrackingInfo {
     package: {
       size: 'XS' | 'S' | 'M' | 'L';
       description?: string;
+      itemPhotoUrl?: string;
+      itemPrice?: number;
     };
     distance: {
       km: number;

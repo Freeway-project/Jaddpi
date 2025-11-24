@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { adminAPI, Order } from '../../../lib/api/admin';
 import { Input } from '@workspace/ui/components/input';
-import { Package, Search, CheckCircle, Clock, XCircle, MapPin, User, DollarSign, ArrowUpDown, ArrowUp, ArrowDown, FileText } from 'lucide-react';
+import { Package, Search, CheckCircle, Clock, XCircle, MapPin, User, DollarSign, ArrowUpDown, ArrowUp, ArrowDown, FileText, Image as ImageIcon, X } from 'lucide-react';
 
 type SortField = 'createdAt' | 'orderId' | 'total' | 'status';
 type SortOrder = 'asc' | 'desc';
@@ -17,6 +17,7 @@ export default function OrdersPage() {
   const [total, setTotal] = useState(0);
   const [sortField, setSortField] = useState<SortField>('createdAt');
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
+  const [selectedImage, setSelectedImage] = useState<{ url: string; title: string; orderId: string } | null>(null);
 
   useEffect(() => {
     loadOrders();
@@ -206,6 +207,7 @@ export default function OrdersPage() {
                       {getSortIcon('orderId')}
                     </div>
                   </th>
+                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase hidden md:table-cell">Item Photo</th>
                   <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Customer</th>
                   <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase hidden lg:table-cell">Route</th>
                   <th
@@ -249,6 +251,36 @@ export default function OrdersPage() {
                       {order.driver && (
                         <div className="text-xs text-gray-500 mt-1">
                           Driver: {order.driver.profile?.name}
+                        </div>
+                      )}
+                    </td>
+                    <td className="px-4 sm:px-6 py-4 hidden md:table-cell">
+                      {order.package?.itemPhotoUrl ? (
+                        <button
+                          onClick={() => setSelectedImage({
+                            url: order.package.itemPhotoUrl!,
+                            title: 'Package Item',
+                            orderId: order.orderId
+                          })}
+                          className="relative group"
+                        >
+                          <img
+                            src={order.package.itemPhotoUrl}
+                            alt="Item"
+                            className="w-12 h-12 object-cover rounded border-2 border-gray-200 group-hover:border-blue-500 transition-colors"
+                          />
+                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors rounded flex items-center justify-center">
+                            <ImageIcon className="w-4 h-4 text-white opacity-0 group-hover:opacity-100" />
+                          </div>
+                        </button>
+                      ) : (
+                        <div className="w-12 h-12 bg-gray-100 rounded border-2 border-dashed border-gray-300 flex items-center justify-center">
+                          <Package className="w-4 h-4 text-gray-400" />
+                        </div>
+                      )}
+                      {order.package?.itemPrice && (
+                        <div className="text-xs text-gray-600 mt-1">
+                          ${(order.package.itemPrice / 100).toFixed(2)}
                         </div>
                       )}
                     </td>
@@ -321,6 +353,31 @@ export default function OrdersPage() {
           </div>
         )}
       </div>
+
+      {/* Full Screen Image Modal */}
+      {selectedImage && (
+        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4" onClick={() => setSelectedImage(null)}>
+          <div className="relative max-w-3xl w-full" onClick={(e) => e.stopPropagation()}>
+            <button
+              onClick={() => setSelectedImage(null)}
+              className="absolute -top-10 right-0 bg-white/90 hover:bg-white p-2 rounded-full transition-colors"
+            >
+              <X className="w-5 h-5 text-gray-900" />
+            </button>
+            <div className="bg-white rounded-lg p-4">
+              <div className="mb-3">
+                <h3 className="text-lg font-semibold text-gray-900">{selectedImage.title}</h3>
+                <p className="text-sm text-gray-600">Order: {selectedImage.orderId}</p>
+              </div>
+              <img
+                src={selectedImage.url}
+                alt={selectedImage.title}
+                className="w-full rounded-lg"
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

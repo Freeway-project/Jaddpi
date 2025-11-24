@@ -527,6 +527,48 @@ export default function TrackOrderPage() {
 
           {/* Details Column - Shows Second on Mobile */}
           <div className="lg:col-span-1 order-2 lg:order-1 space-y-3 sm:space-y-4">
+            {/* Item Photo - Priority Display */}
+            {trackingInfo.order.package.itemPhotoUrl && (
+              <div className="bg-white rounded-lg shadow-md overflow-hidden">
+                <div className="p-2 sm:p-3">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Package className="w-4 h-4 text-blue-600" />
+                    <h4 className="text-sm font-semibold text-gray-900">Package Item</h4>
+                  </div>
+                  <button
+                    onClick={() => setSelectedImage({
+                      url: trackingInfo.order.package.itemPhotoUrl!,
+                      title: 'Package Item Photo'
+                    })}
+                    className="w-full relative group overflow-hidden rounded-lg"
+                  >
+                    <img
+                      src={trackingInfo.order.package.itemPhotoUrl}
+                      alt="Package Item"
+                      className="w-full h-32 sm:h-40 object-cover group-hover:scale-105 transition-transform"
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                      <ImageIcon className="w-6 h-6 text-white opacity-0 group-hover:opacity-100" />
+                    </div>
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-2">
+                      <p className="text-white text-xs font-semibold">Click to view full size</p>
+                    </div>
+                  </button>
+                  {trackingInfo.order.package.itemPrice && (
+                    <div className="mt-2 p-2 bg-blue-50 rounded text-xs">
+                      <span className="text-gray-600">Declared Value: </span>
+                      <span className="font-semibold text-gray-900">
+                        ${(trackingInfo.order.package.itemPrice / 100).toFixed(2)} CAD
+                      </span>
+                    </div>
+                  )}
+                  <p className="text-xs text-gray-500 mt-2 italic">
+                    * For sender, recipient, and admin verification only. Not visible to drivers.
+                  </p>
+                </div>
+              </div>
+            )}
+
             {/* Pickup & Dropoff Photos */}
             {(trackingInfo.order.pickup.photoUrl || trackingInfo.order.dropoff.photoUrl) && (
               <div className="bg-white rounded-lg shadow-md overflow-hidden">

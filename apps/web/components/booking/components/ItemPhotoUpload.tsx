@@ -136,7 +136,7 @@ export default function ItemPhotoUpload({ onPhotoSelected, existingPhoto }: Item
       )}
 
       <p className="text-xs text-gray-500 italic">
-        * This photo will only be visible to you, the recipient, and admin for verification purposes.
+        * This photo will only be visible to you, the recipient, and admin for verification purposes. Drivers cannot see it.
       </p>
     </div>
   );

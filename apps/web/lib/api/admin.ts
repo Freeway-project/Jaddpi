@@ -69,6 +69,8 @@ export interface Order {
     size: string;
     description?: string;
     weight?: string;
+    itemPhotoUrl?: string;
+    itemPrice?: number;
   };
   distance?: {
     distanceKm: number;
