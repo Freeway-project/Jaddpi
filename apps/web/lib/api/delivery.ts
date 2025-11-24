@@ -119,4 +119,11 @@ export const deliveryAPI = {
     });
     return response.data;
   },
+
+  uploadTempPhoto: async (photoBase64: string): Promise<PhotoUploadResponse> => {
+    const response = await apiClient.post('/delivery/upload-temp-photo', {
+      photo: photoBase64
+    });
+    return response.data;
+  },
 };

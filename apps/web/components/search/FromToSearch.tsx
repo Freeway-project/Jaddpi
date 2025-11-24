@@ -175,10 +175,10 @@ export default function FromToSearch({
   };
 
   const packageTypes = [
-    { id: 'envelope', label: 'Envelope', icon: '📄', size: 'Up to 5kg', dimensions: '' },
-    { id: 'small', label: 'Small', icon: '📦', size: '10×10×10 in', dimensions: 'Up to 15kg' },
-    { id: 'medium', label: 'Medium', icon: '📦', size: '14×14×14 in', dimensions: 'Up to 15kg' },
-    { id: 'large', label: 'Large', icon: '📦', size: '16×16×16 in', dimensions: 'Up to 15kg max' },
+    { id: 'envelope', label: 'Envelope', icon: '📄', size: '8.5x11 ' },
+    { id: 'small', label: 'Small', icon: '📦', size: '10×10×10 ' },
+    { id: 'medium', label: 'Medium', icon: '📦', size: '14×14×14 ' },
+    { id: 'large', label: 'Large', icon: '📦', size: '16×16×16 ' },
   ];
 
   return (
@@ -242,32 +242,28 @@ export default function FromToSearch({
               </div>
               <Label className="text-sm sm:text-base font-semibold text-gray-900">Package Size</Label>
             </div>
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-4 gap-3">
               {packageTypes.map((type) => (
                 <button
                   key={type.id}
                   onClick={() => setPackageDetails({ ...packageDetails, type: type.id as PackageDetails['type'] })}
-                  className={`p-2 sm:p-3 rounded-lg transition-all border-2 ${
+                  className={`flex flex-col items-center justify-center text-center p-2 sm:p-3 rounded-xl border-2 transition-all duration-200 h-24 sm:h-28 ${
                     packageDetails.type === type.id
-                      ? 'bg-blue-600 text-white border-blue-600 shadow-lg'
-                      : 'bg-white text-gray-700 border-gray-200 hover:border-blue-300 hover:bg-blue-50'
+                      ? 'bg-blue-600 text-white border-blue-600 shadow-lg shadow-blue-500/20'
+                      : 'bg-gray-50 text-gray-800 border-gray-200 hover:border-blue-400'
                   }`}
                 >
-                  <div className="flex flex-col items-center justify-center">
-                    <span className="text-lg sm:text-2xl">{type.icon}</span>
-                    <div className="font-semibold text-[10px] sm:text-sm mt-1">{type.label}</div>
-                    <div className={`text-[8px] sm:text-xs font-normal text-center leading-tight mt-1 ${
-                      packageDetails.type === type.id ? 'text-blue-100' : 'text-gray-500'
-                    }`}>
-                      {type.size}
-                      {type.dimensions && (
-                        <div className="mt-0.5">{type.dimensions}</div>
-                      )}
-                    </div>
+                  <span className="text-2xl sm:text-3xl">{type.icon}</span>
+                  <div className="font-bold text-xs sm:text-sm mt-2">{type.label}</div>
+                  <div className={`text-[10px] sm:text-xs mt-1 font-medium ${
+                    packageDetails.type === type.id ? 'text-blue-200' : 'text-gray-500'
+                  }`}>
+                    {type.size}
                   </div>
                 </button>
               ))}
             </div>
+            <p className="text-center text-xs text-gray-500 mt-3">*Max weight for packages is 15kg. Envelopes up to 5kg</p>
           </div>
 
           {/* Description */}

@@ -31,7 +31,7 @@ interface ReviewOrderProps {
     newTotal: number;
   } | null) => void;
   itemPhoto?: string;
-  onItemPhotoSelected?: (base64Photo: string) => void;
+  onItemPhotoSelected?: (photoData: { base64: string; url?: string }) => void;
   itemPrice?: string;
   onItemPriceChanged?: (price: string) => void;
 }
@@ -129,7 +129,7 @@ export default function ReviewOrder({ sender, recipient, estimate, appliedCoupon
         {/* Item Photo Upload - MANDATORY */}
         <div className="bg-white rounded-lg border border-gray-200 p-4">
           <ItemPhotoUpload
-            onPhotoSelected={onItemPhotoSelected || (() => {})}
+            onPhotoSelected={onItemPhotoSelected || (() => { })}
             existingPhoto={itemPhoto}
           />
         </div>

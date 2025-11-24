@@ -172,11 +172,11 @@ export default function AddressAutocomplete({
   return (
     <div className="relative">
       {label && (
-        <Label htmlFor="address" className="text-sm sm:text-base font-semibold text-gray-900 mb-2 sm:mb-3 block">{label}</Label>
+        <Label htmlFor="address" className="text-sm font-medium text-slate-700 ml-1 mb-2 block">{label}</Label>
       )}
 
 
-      <div className="relative">
+      <div className="relative group">
         <Input
           id="address"
           type="text"
@@ -186,39 +186,44 @@ export default function AddressAutocomplete({
           onFocus={handleInputFocus}
           placeholder={placeholder}
           disabled={disabled}
-          className={`w-full bg-white border-2 border-gray-300 text-gray-900 placeholder:text-gray-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed transition-all ${className}`}
+          className={`h-14 pl-4 rounded-2xl border-slate-200 bg-slate-50 text-lg transition-all duration-200 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 placeholder:text-slate-400 disabled:bg-slate-100 disabled:text-slate-500 disabled:cursor-not-allowed ${className}`}
         />
-        <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-          {isLoading && (
-            <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin text-gray-400" />
+        <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
+          {isLoading ? (
+            <Loader2 className="w-5 h-5 animate-spin text-blue-500" />
+          ) : (
+            <MapPin className="w-5 h-5 text-slate-400 group-focus-within:text-blue-500 transition-colors" />
           )}
         </div>
       </div>
 
       {error && (
-        <p className="text-sm sm:text-base text-red-600 mt-1.5 sm:mt-2">{error}</p>
+        <p className="text-sm font-medium text-rose-500 mt-1.5 flex items-center gap-1.5 animate-in slide-in-from-top-1">
+          <span className="inline-block w-1.5 h-1.5 rounded-full bg-rose-500" />
+          {error}
+        </p>
       )}
 
       {apiError && !error && (
-        <p className="text-sm sm:text-base text-amber-600 mt-1.5 sm:mt-2">{apiError}</p>
+        <p className="text-sm text-amber-600 mt-1.5">{apiError}</p>
       )}
 
       {showSuggestions && suggestions.length > 0 && (
-        <div className="absolute z-50 w-full mt-2 bg-white border-2 border-gray-200 rounded-xl shadow-xl max-h-64 overflow-y-auto">
+        <div className="absolute z-50 w-full mt-2 bg-white border border-slate-200 rounded-2xl shadow-xl max-h-64 overflow-y-auto overflow-hidden">
           {suggestions.map((suggestion) => (
             <Button
               key={suggestion.place_id}
               variant="ghost"
-              className="w-full justify-start h-auto px-4 py-3 sm:py-4 text-left rounded-none hover:bg-blue-50 transition-colors border-b border-gray-100 last:border-b-0"
+              className="w-full justify-start h-auto px-4 py-3 text-left rounded-none hover:bg-blue-50 transition-colors border-b border-slate-100 last:border-b-0"
               onClick={() => handleSuggestionClick(suggestion)}
             >
               <div className="flex items-start space-x-3 w-full">
-                <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                <MapPin className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
                 <div className="min-w-0 flex-1">
-                  <div className="font-semibold text-sm sm:text-base text-gray-900">
+                  <div className="font-medium text-slate-900">
                     {suggestion.main_text}
                   </div>
-                  <div className="text-xs sm:text-sm text-gray-500 truncate mt-0.5">
+                  <div className="text-sm text-slate-500 truncate mt-0.5">
                     {suggestion.secondary_text}
                   </div>
                 </div>
