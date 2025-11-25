@@ -15,6 +15,7 @@ export default function ItemPhotoUpload({ onPhotoSelected, existingPhoto }: Item
   const [photoBase64, setPhotoBase64] = useState<string>(existingPhoto || '');
   const [previewUrl, setPreviewUrl] = useState<string>(existingPhoto || '');
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,6 +41,7 @@ export default function ItemPhotoUpload({ onPhotoSelected, existingPhoto }: Item
         const base64 = reader.result as string;
         setPhotoBase64(base64);
         setPreviewUrl(base64);
+        setUploadError(null);
 
         // Start upload immediately
         setIsUploading(true);
@@ -47,17 +49,20 @@ export default function ItemPhotoUpload({ onPhotoSelected, existingPhoto }: Item
           const response = await deliveryAPI.uploadTempPhoto(base64);
           if (response.success && response.data.photoUrl) {
             onPhotoSelected({ base64, url: response.data.photoUrl });
-            toast.success('Photo uploaded successfully!');
+            toast.success('✅ Photo uploaded successfully!');
           } else {
-            // Fallback to base64 if upload fails (though backend should handle it)
-            onPhotoSelected({ base64 });
-            toast.error('Failed to upload photo, but we saved it locally.');
+            // Show error - require successful upload
+            const errorMsg = 'Photo upload failed. Please try again.';
+            setUploadError(errorMsg);
+            setPreviewUrl('');
+            toast.error(errorMsg);
           }
-        } catch (error) {
+        } catch (error: any) {
           console.error('Upload failed:', error);
-          // Fallback to base64
-          onPhotoSelected({ base64 });
-          toast.error('Photo upload failed. Using local copy.');
+          const errorMsg = error?.response?.data?.message || 'Failed to upload photo. Please try again.';
+          setUploadError(errorMsg);
+          setPreviewUrl('');
+          toast.error(errorMsg);
         } finally {
           setIsUploading(false);
         }
@@ -81,6 +86,7 @@ export default function ItemPhotoUpload({ onPhotoSelected, existingPhoto }: Item
   const handleRemove = () => {
     setPhotoBase64('');
     setPreviewUrl('');
+    setUploadError(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -99,13 +105,18 @@ export default function ItemPhotoUpload({ onPhotoSelected, existingPhoto }: Item
             <p className="text-xs text-gray-500">Required for verification</p>
           </div>
         </div>
-        {photoBase64 && !isUploading && (
+        {photoBase64 && !isUploading && !uploadError && (
           <CheckCircle2 className="w-5 h-5 text-green-600" />
         )}
         {isUploading && (
           <div className="flex items-center gap-2 text-blue-600 text-xs font-medium">
             <Loader2 className="w-4 h-4 animate-spin" />
             <span>Uploading...</span>
+          </div>
+        )}
+        {uploadError && (
+          <div className="flex items-center gap-1 text-red-600 text-xs font-semibold">
+            <span>❌ Upload failed</span>
           </div>
         )}
       </div>
@@ -120,15 +131,16 @@ export default function ItemPhotoUpload({ onPhotoSelected, existingPhoto }: Item
       />
 
       {!previewUrl ? (
-        <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer" onClick={handleCapture}>
+        <div className="border-2 border-dashed border-red-300 rounded-lg p-6 text-center bg-red-50 hover:bg-red-100 transition-colors cursor-pointer" onClick={handleCapture}>
           <div className="space-y-3">
             <div className="flex justify-center">
-              <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center">
-                <Camera className="w-8 h-8 text-blue-600" />
+              <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center">
+                <Camera className="w-8 h-8 text-red-600" />
               </div>
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-900">Take a photo of your item</p>
+              <p className="text-sm font-medium text-gray-900">📸 Take a photo of your item</p>
+              <p className="text-xs text-red-600 font-semibold mt-1">⚠️ This is required to proceed</p>
               <p className="text-xs text-gray-500 mt-1">Clear photo helps driver identify the package</p>
             </div>
             <Button
@@ -171,6 +183,24 @@ export default function ItemPhotoUpload({ onPhotoSelected, existingPhoto }: Item
               Photo ready
             </div>
           )}
+        </div>
+      )}
+
+      {uploadError && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-3 flex items-start justify-between gap-3">
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-red-900">Upload failed</p>
+            <p className="text-xs text-red-700 mt-1">{uploadError}</p>
+          </div>
+          <button
+            onClick={() => {
+              setUploadError(null);
+              handleCapture();
+            }}
+            className="text-xs font-semibold text-red-600 hover:text-red-700 whitespace-nowrap flex-shrink-0"
+          >
+            Retry
+          </button>
         </div>
       )}
 

@@ -268,6 +268,11 @@ router.post("/create-order", requireAuth, async (req: Request, res: Response) =>
       logger.info({ subtotal: normalizedPricing.subtotal, gst, total: finalPricing.total }, "Tax calculated (no coupon)");
     }
 
+    // Validate item photo is provided (mandatory)
+    if (!packageDetails?.itemPhotoUrl && !packageDetails?.itemPhoto) {
+      throw new ApiError(400, "Item photo is required. Please upload a photo of the item before proceeding.");
+    }
+
     // Generate unique order ID
     const orderId = `ORD-${Date.now()}-${Math.random().toString(36).substring(2, 9).toUpperCase()}`;
 
