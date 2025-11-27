@@ -23,7 +23,7 @@ app.use(cors({
 
 // IMPORTANT: Webhook routes MUST come BEFORE express.json()
 // to receive raw body for signature verification
-app.use("/api/webhooks", webhookRoutes);
+app.use("/webhooks", webhookRoutes);
 
 // JSON body parser for all other routes (5MB limit for photo uploads)
 app.use(express.json({ limit: '5mb' }));
