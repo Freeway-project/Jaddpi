@@ -104,3 +104,4 @@ jobs:
           else
             echo "❌ Deployment to VPS failed"
             exit 1
+          fi
