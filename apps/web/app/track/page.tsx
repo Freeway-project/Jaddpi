@@ -23,7 +23,7 @@ export default function TrackPage() {
         </div>
 
         {/* Track Widget */}
-        <TrackOrderWidget 
+        <TrackOrderWidget
           onTrack={(orderId: string) => {
             console.log('Tracking order:', orderId);
           }}
@@ -32,7 +32,7 @@ export default function TrackPage() {
         {/* Additional Info */}
         <div className="mt-12 bg-white rounded-xl shadow-lg border border-gray-200 p-8">
           <h2 className="text-xl font-bold text-gray-900 mb-4">How to Track Your Order</h2>
-          
+
           <div className="space-y-4">
             <div className="flex gap-4">
               <div className="flex-shrink-0">
@@ -43,7 +43,7 @@ export default function TrackPage() {
               <div>
                 <h3 className="font-semibold text-gray-900 mb-1">Find Your Order ID</h3>
                 <p className="text-sm text-gray-600">
-                  Check your email or SMS for your order confirmation. Your Order ID looks like: <code className="px-2 py-1 bg-gray-100 rounded font-mono text-xs">ORD-2025-001</code>
+                  Check your email or SMS for your order confirmation. Your Order ID looks like: <code className="px-2 py-1 bg-gray-100 rounded font-mono text-xs">ORD-1732684730000-7X9Y2Z1</code>
                 </p>
               </div>
             </div>
@@ -81,7 +81,7 @@ export default function TrackPage() {
         {/* FAQ Section */}
         <div className="mt-8 bg-white rounded-xl shadow-lg border border-gray-200 p-8">
           <h2 className="text-xl font-bold text-gray-900 mb-4">Common Questions</h2>
-          
+
           <div className="space-y-4">
             <details className="group">
               <summary className="font-semibold text-gray-900 cursor-pointer list-none flex items-center justify-between py-2">
@@ -89,7 +89,7 @@ export default function TrackPage() {
                 <span className="text-blue-600 group-open:rotate-180 transition-transform">▼</span>
               </summary>
               <p className="mt-2 text-sm text-gray-600 pl-4">
-                Your Order ID was sent to your email and phone number immediately after placing the order. 
+                Your Order ID was sent to your email and phone number immediately after placing the order.
                 Check your spam folder or SMS messages. If you still can't find it, contact our support team.
               </p>
             </details>
@@ -100,7 +100,7 @@ export default function TrackPage() {
                 <span className="text-blue-600 group-open:rotate-180 transition-transform">▼</span>
               </summary>
               <p className="mt-2 text-sm text-gray-600 pl-4">
-                This means your order is confirmed but waiting for the next pickup batch (10:00 AM or 12:00 PM). 
+                This means your order is confirmed but waiting for the next pickup batch (10:00 AM or 12:00 PM).
                 A driver will be assigned shortly before the scheduled pickup time.
               </p>
             </details>
@@ -111,7 +111,7 @@ export default function TrackPage() {
                 <span className="text-blue-600 group-open:rotate-180 transition-transform">▼</span>
               </summary>
               <p className="mt-2 text-sm text-gray-600 pl-4">
-                Yes! Once you're on the tracking page, you can share the URL with anyone. 
+                Yes! Once you're on the tracking page, you can share the URL with anyone.
                 They'll be able to see the delivery status without logging in.
               </p>
             </details>
@@ -122,7 +122,7 @@ export default function TrackPage() {
                 <span className="text-blue-600 group-open:rotate-180 transition-transform">▼</span>
               </summary>
               <p className="mt-2 text-sm text-gray-600 pl-4">
-                When your order is active (picked up or in transit), the driver's location updates every 5 seconds. 
+                When your order is active (picked up or in transit), the driver's location updates every 5 seconds.
                 You'll see the marker move in real-time on the map.
               </p>
             </details>

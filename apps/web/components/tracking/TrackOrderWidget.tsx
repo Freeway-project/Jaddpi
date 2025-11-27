@@ -12,10 +12,10 @@ interface TrackOrderWidgetProps {
   onTrack?: (orderId: string) => void;
 }
 
-export default function TrackOrderWidget({ 
-  className = '', 
+export default function TrackOrderWidget({
+  className = '',
   initialOrderId = '',
-  onTrack 
+  onTrack
 }: TrackOrderWidgetProps) {
   const router = useRouter();
   const [orderId, setOrderId] = useState(initialOrderId);
@@ -29,10 +29,10 @@ export default function TrackOrderWidget({
 
     const cleanOrderId = orderId.trim().toUpperCase();
 
-    // Validate order ID format (ORD-YYYY-XXX)
-    const orderIdPattern = /^ORD-\d{4}-\d+$/;
+    // Validate order ID format (ORD-timestamp-random or ORD-YYYY-XXX)
+    const orderIdPattern = /^ORD-[A-Z0-9-]+$/i;
     if (!orderIdPattern.test(cleanOrderId)) {
-      toast.error('Invalid order ID format. Example: ORD-2025-001');
+      toast.error('Invalid order ID format. Example: ORD-1732684730000-7X9Y2Z1');
       return;
     }
 
@@ -84,7 +84,7 @@ export default function TrackOrderWidget({
               value={orderId}
               onChange={(e) => setOrderId(e.target.value.toUpperCase())}
               onKeyPress={handleKeyPress}
-              placeholder="ORD-2025-001"
+              placeholder="ORD-1732684730000-7X9Y2Z1"
               className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg 
                        focus:ring-2 focus:ring-blue-500 focus:border-blue-500 
                        placeholder-gray-400 text-gray-900 font-mono text-sm
@@ -93,7 +93,7 @@ export default function TrackOrderWidget({
             />
           </div>
           <p className="mt-2 text-xs text-gray-500">
-            Format: ORD-YYYY-XXX (e.g., ORD-2025-001)
+            Format: ORD-TIMESTAMP-RANDOM (e.g., ORD-1732684730000-7X9Y2Z1)
           </p>
         </div>
 

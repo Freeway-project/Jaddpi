@@ -6,11 +6,11 @@ Thanks for signing up with {{appName}}. To complete your registration, please ve
 
 Your Verification Code: {{otpCode}}
 
-This code expires in 10 minutes.
+This code expires in 5 minutes.
 
 How to verify:
 • Enter this code in the verification form
-• Complete the process within 10 minutes
+• Complete the process within 5 minutes
 • You'll be redirected to complete your profile
 
 SECURITY NOTE: If you didn't request this code, please ignore this email. Your account security is important to us.

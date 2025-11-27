@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -125,7 +126,9 @@
                 border-radius: 4px;
             }
 
-            .header, .content, .footer {
+            .header,
+            .content,
+            .footer {
                 padding: 24px 20px;
             }
 
@@ -140,6 +143,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
@@ -150,17 +154,19 @@
         <div class="content">
             <div class="welcome-text">
                 Hello! 🔐<br>
-                Someone is trying to log in to your {{appName}} account. If this was you, please use the verification code below to complete your login.
+                Someone is trying to log in to your {{appName}} account. If this was you, please use the verification
+                code below to complete your login.
             </div>
 
             <div class="otp-container">
                 <div class="otp-label">Your Login Code</div>
                 <div class="otp-code">{{otpCode}}</div>
-                <div class="otp-validity">⏰ Expires in 10 minutes</div>
+                <div class="otp-validity">⏰ Expires in 5 minutes</div>
             </div>
 
             <div class="security-notice">
-                <p><strong>🚨 Important:</strong> If you didn't attempt to log in, please ignore this email and consider changing your password to keep your account secure.</p>
+                <p><strong>🚨 Important:</strong> If you didn't attempt to log in, please ignore this email and consider
+                    changing your password to keep your account secure.</p>
             </div>
         </div>
 
@@ -170,4 +176,5 @@
         </div>
     </div>
 </body>
+
 </html>

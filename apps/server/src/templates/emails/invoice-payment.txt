@@ -41,3 +41,4 @@ Status: {{paymentStatus}}
 Thank you for your business!
 
 Jaddpi Delivery Service
+Subsidiary of Blucode

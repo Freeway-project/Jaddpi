@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -160,7 +161,9 @@
                 border-radius: 4px;
             }
 
-            .header, .content, .footer {
+            .header,
+            .content,
+            .footer {
                 padding: 24px 20px;
             }
 
@@ -175,6 +178,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
@@ -185,26 +189,28 @@
         <div class="content">
             <div class="welcome-text">
                 Hi there! 👋<br>
-                Thanks for signing up with {{appName}}. To complete your registration, please verify your email address using the code below.
+                Thanks for signing up with {{appName}}. To complete your registration, please verify your email address
+                using the code below.
             </div>
 
             <div class="otp-container">
                 <div class="otp-label">Your Verification Code</div>
                 <div class="otp-code">{{otpCode}}</div>
-                <div class="otp-validity">⏰ Expires in 10 minutes</div>
+                <div class="otp-validity">⏰ Expires in 5 minutes</div>
             </div>
 
             <div class="instructions">
                 <h3>How to verify:</h3>
                 <ul>
                     <li>Enter this code in the verification form</li>
-                    <li>Complete the process within 10 minutes</li>
+                    <li>Complete the process within 5 minutes</li>
                     <li>You'll be redirected to complete your profile</li>
                 </ul>
             </div>
 
             <div class="security-notice">
-                <p><strong>🔐 Security Note:</strong> If you didn't request this code, please ignore this email. Your account security is important to us.</p>
+                <p><strong>🔐 Security Note:</strong> If you didn't request this code, please ignore this email. Your
+                    account security is important to us.</p>
             </div>
         </div>
 
@@ -214,4 +220,5 @@
         </div>
     </div>
 </body>
+
 </html>

@@ -6,7 +6,7 @@ Someone is trying to log in to your {{appName}} account. If this was you, please
 
 Your Login Code: {{otpCode}}
 
-This code expires in 10 minutes.
+This code expires in 5 minutes.
 
 IMPORTANT: If you didn't attempt to log in, please ignore this email and consider changing your password to keep your account secure.
 

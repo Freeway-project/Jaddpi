@@ -20,10 +20,10 @@ export default function JaddpiLanding() {
 
     const cleanOrderId = orderId.trim().toUpperCase();
 
-    // Validate order ID format (ORD-YYYY-XXX)
-    const orderIdPattern = /^ORD-\d{4}-\d+$/;
+    // Validate order ID format (ORD-timestamp-random or ORD-YYYY-XXX)
+    const orderIdPattern = /^ORD-[A-Z0-9-]+$/i;
     if (!orderIdPattern.test(cleanOrderId)) {
-      toast.error('Invalid order ID format. Example: ORD-2025-001');
+      toast.error('Invalid order ID format. Example: ORD-1732684730000-7X9Y2Z1');
       return;
     }
 
@@ -52,13 +52,13 @@ export default function JaddpiLanding() {
           <BaseAnimation animationFile="global-delivery.json" width={150} height={150} className="mx-auto mb-4 sm:w-[200px] sm:h-[200px] md:w-[250px] md:h-[250px]" />
 
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight px-2">
-            Real-Time Parcel Delivery in Surrey & Langley, BC
+            Real-Time Parcel Delivery in Canada
           </h1>
 
           <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-6 sm:mb-8 px-4">
             Ship parcels with live GPS tracking. Fast, reliable local courier service for anyone. Create orders in minutes.
           </p>
-          
+
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
             <a href="/search" className="px-6 sm:px-8 py-3 sm:py-4 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition shadow-lg shadow-blue-600/30 text-sm sm:text-base">
               Create an order
@@ -107,7 +107,7 @@ export default function JaddpiLanding() {
                     value={orderId}
                     onChange={(e) => setOrderId(e.target.value.toUpperCase())}
                     onKeyPress={handleKeyPress}
-                    placeholder="ORD-2025-001"
+                    placeholder="ORD-1732684730000-7X9Y2Z1"
                     className="block w-full pl-12 pr-4 py-4 border-2 border-gray-300 rounded-xl 
                              focus:ring-2 focus:ring-blue-500 focus:border-blue-500 
                              placeholder-gray-400 text-gray-900 font-mono text-lg
@@ -116,7 +116,7 @@ export default function JaddpiLanding() {
                   />
                 </div>
                 <p className="mt-2 text-sm text-gray-500">
-                  Format: ORD-YYYY-XXX (e.g., ORD-2025-001)
+                  Format: ORD-TIMESTAMP-RANDOM (e.g., ORD-1732684730000-7X9Y2Z1)
                 </p>
               </div>
 
@@ -144,7 +144,7 @@ export default function JaddpiLanding() {
 
             {/* Info Cards */}
             <div className="mt-6 sm:mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-         
+
 
               <div className="p-3 sm:p-4 bg-green-50 rounded-xl border border-green-100">
                 <div className="flex gap-2 sm:gap-3">
@@ -154,7 +154,7 @@ export default function JaddpiLanding() {
                   <div>
                     <p className="text-xs sm:text-sm text-green-900 font-semibold mb-1"></p>
                     <p className="text-[11px] sm:text-xs text-green-700">
-                      Get instant delivery confirmation 
+                      Get instant delivery confirmation
                     </p>
                   </div>
                 </div>
@@ -280,160 +280,159 @@ export default function JaddpiLanding() {
             Transparent base fare plus per-kilometer rate within Surrey and Langley.
           </p>
 
-         
+
 
           <div className="mt-8 flex justify-center">
             <BaseAnimation animationFile="truck-delivery-service.json" width={200} height={120} className="sm:w-[300px] sm:h-[180px] md:w-[450px] md:h-[250px]" />
           </div>
         </div>
-            </section>
-      
-            {/* FAQ */}
-            <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20">
-              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 text-center mb-8 sm:mb-12">Frequently Asked Questions</h2>
+      </section>
 
-              <div className="space-y-3 sm:space-y-4">
-                {/* General */}
-                <details className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 group">
-                  <summary className="font-semibold text-sm sm:text-base text-gray-900 cursor-pointer list-none flex items-center justify-between">
-                    <span>What services does Jaddpi offer?</span>
-                    <span className="text-blue-600 group-open:rotate-180 transition-transform text-sm">▼</span>
-                  </summary>
-                  <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-600 leading-relaxed">Door-to-door parcel pickup and drop, sender-to-receiver deliveries, scheduled pickups, on-demand drops, and unique protected delivery flow.</p>
-                </details>
+      {/* FAQ */}
+      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20">
+        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 text-center mb-8 sm:mb-12">Frequently Asked Questions</h2>
 
-                <details className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 group">
-                  <summary className="font-semibold text-sm sm:text-base text-gray-900 cursor-pointer list-none flex items-center justify-between">
-                    <span>Where do you operate?</span>
-                    <span className="text-blue-600 group-open:rotate-180 transition-transform text-sm">▼</span>
-                  </summary>
-                  <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-600 leading-relaxed">We operate within selected serviceable Langley and Surrey pin codes. Enter pickup and drop addresses at jaddpi.com to check coverage and estimated delivery times.</p>
-                </details>
+        <div className="space-y-3 sm:space-y-4">
+          {/* General */}
+          <details className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 group">
+            <summary className="font-semibold text-sm sm:text-base text-gray-900 cursor-pointer list-none flex items-center justify-between">
+              <span>What services does Jaddpi offer?</span>
+              <span className="text-blue-600 group-open:rotate-180 transition-transform text-sm">▼</span>
+            </summary>
+            <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-600 leading-relaxed">Door-to-door parcel pickup and drop, sender-to-receiver deliveries, scheduled pickups, on-demand drops, and unique protected delivery flow.</p>
+          </details>
 
-                <details className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 group">
-                  <summary className="font-semibold text-sm sm:text-base text-gray-900 cursor-pointer list-none flex items-center justify-between">
-                    <span>What items are restricted or prohibited?</span>
-                    <span className="text-blue-600 group-open:rotate-180 transition-transform text-sm">▼</span>
-                  </summary>
-                  <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-600 leading-relaxed">Prohibited items include cash, perishable foods without cold chain, live animals, hazardous materials (flammables, explosives), illegal substances, firearms, counterfeit goods, fragile items without proper packaging, and items exceeding size/weight limits. All hazardous and prohibited items as per Canadian law are not allowed.</p>
-                </details>
+          <details className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 group">
+            <summary className="font-semibold text-sm sm:text-base text-gray-900 cursor-pointer list-none flex items-center justify-between">
+              <span>Where do you operate?</span>
+              <span className="text-blue-600 group-open:rotate-180 transition-transform text-sm">▼</span>
+            </summary>
+            <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-600 leading-relaxed">We operate within selected serviceable Langley and Surrey pin codes. Enter pickup and drop addresses at jaddpi.com to check coverage and estimated delivery times.</p>
+          </details>
 
-                {/* Booking & Accounts */}
-                <details className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 group">
-                  <summary className="font-semibold text-sm sm:text-base text-gray-900 cursor-pointer list-none flex items-center justify-between">
-                    <span>Do I need an account to book?</span>
-                    <span className="text-blue-600 group-open:rotate-180 transition-transform text-sm">▼</span>
-                  </summary>
-                  <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-600 leading-relaxed">Yes, you need to create an account to save addresses, preferences, and view order history.</p>
-                </details>
+          <details className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 group">
+            <summary className="font-semibold text-sm sm:text-base text-gray-900 cursor-pointer list-none flex items-center justify-between">
+              <span>What items are restricted or prohibited?</span>
+              <span className="text-blue-600 group-open:rotate-180 transition-transform text-sm">▼</span>
+            </summary>
+            <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-600 leading-relaxed">Prohibited items include cash, perishable foods without cold chain, live animals, hazardous materials (flammables, explosives), illegal substances, firearms, counterfeit goods, fragile items without proper packaging, and items exceeding size/weight limits. All hazardous and prohibited items as per Canadian law are not allowed.</p>
+          </details>
 
-                <details className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 group">
-                  <summary className="font-semibold text-sm sm:text-base text-gray-900 cursor-pointer list-none flex items-center justify-between">
-                    <span>How do I get a quote?</span>
-                    <span className="text-blue-600 group-open:rotate-180 transition-transform text-sm">▼</span>
-                  </summary>
-                  <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-600 leading-relaxed">Enter pickup/drop addresses, parcel type, item description, and item weight on jaddpi.com to see an instant price.</p>
-                </details>
+          {/* Booking & Accounts */}
+          <details className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 group">
+            <summary className="font-semibold text-sm sm:text-base text-gray-900 cursor-pointer list-none flex items-center justify-between">
+              <span>Do I need an account to book?</span>
+              <span className="text-blue-600 group-open:rotate-180 transition-transform text-sm">▼</span>
+            </summary>
+            <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-600 leading-relaxed">Yes, you need to create an account to save addresses, preferences, and view order history.</p>
+          </details>
 
-                <details className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 group">
-                  <summary className="font-semibold text-sm sm:text-base text-gray-900 cursor-pointer list-none flex items-center justify-between">
-                    <span>Can I schedule a pickup?</span>
-                    <span className="text-blue-600 group-open:rotate-180 transition-transform text-sm">▼</span>
-                  </summary>
-                  <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-600 leading-relaxed">Not currently, it is under development.</p>
-                </details>
+          <details className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 group">
+            <summary className="font-semibold text-sm sm:text-base text-gray-900 cursor-pointer list-none flex items-center justify-between">
+              <span>How do I get a quote?</span>
+              <span className="text-blue-600 group-open:rotate-180 transition-transform text-sm">▼</span>
+            </summary>
+            <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-600 leading-relaxed">Enter pickup/drop addresses, parcel type, item description, and item weight on jaddpi.com to see an instant price.</p>
+          </details>
 
-                {/* Packaging */}
-                <details className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 group">
-                  <summary className="font-semibold text-sm sm:text-base text-gray-900 cursor-pointer list-none flex items-center justify-between">
-                    <span>How should I pack my parcel?</span>
-                    <span className="text-blue-600 group-open:rotate-180 transition-transform text-sm">▼</span>
-                  </summary>
-                  <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-600 leading-relaxed">Use a sturdy box, fill voids with cushioning, seal seams with packing tape, and affix the shipping label clearly. Liquid items must be sealed, bagged, and cushioned. Fragile goods need "FRAGILE" labeling and adequate internal protection.</p>
-                </details>
+          <details className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 group">
+            <summary className="font-semibold text-sm sm:text-base text-gray-900 cursor-pointer list-none flex items-center justify-between">
+              <span>Can I schedule a pickup?</span>
+              <span className="text-blue-600 group-open:rotate-180 transition-transform text-sm">▼</span>
+            </summary>
+            <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-600 leading-relaxed">Not currently, it is under development.</p>
+          </details>
 
-                <details className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 group">
-                  <summary className="font-semibold text-sm sm:text-base text-gray-900 cursor-pointer list-none flex items-center justify-between">
-                    <span>Size and weight limits?</span>
-                    <span className="text-blue-600 group-open:rotate-180 transition-transform text-sm">▼</span>
-                  </summary>
-                  <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-600 leading-relaxed">Standard: up to 15 kg, standard envelope, parcel up to small 10x10x10, medium 14x14x14, and large 16x16x16 inches per parcel. Oversize/overweight may incur surcharges or require special handling.</p>
-                </details>
+          {/* Packaging */}
+          <details className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 group">
+            <summary className="font-semibold text-sm sm:text-base text-gray-900 cursor-pointer list-none flex items-center justify-between">
+              <span>How should I pack my parcel?</span>
+              <span className="text-blue-600 group-open:rotate-180 transition-transform text-sm">▼</span>
+            </summary>
+            <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-600 leading-relaxed">Use a sturdy box, fill voids with cushioning, seal seams with packing tape, and affix the shipping label clearly. Liquid items must be sealed, bagged, and cushioned. Fragile goods need "FRAGILE" labeling and adequate internal protection.</p>
+          </details>
 
-                {/* Tracking */}
-                <details className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 group">
-                  <summary className="font-semibold text-sm sm:text-base text-gray-900 cursor-pointer list-none flex items-center justify-between">
-                    <span>How do I track my parcel?</span>
-                    <span className="text-blue-600 group-open:rotate-180 transition-transform text-sm">▼</span>
-                  </summary>
-                  <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-600 leading-relaxed">Enter your tracking number on jaddpi.com to see real-time status, ETA, and delivery options.</p>
-                </details>
+          <details className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 group">
+            <summary className="font-semibold text-sm sm:text-base text-gray-900 cursor-pointer list-none flex items-center justify-between">
+              <span>Size and weight limits?</span>
+              <span className="text-blue-600 group-open:rotate-180 transition-transform text-sm">▼</span>
+            </summary>
+            <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-600 leading-relaxed">Standard: up to 15 kg, standard envelope, parcel up to small 10x10x10, medium 14x14x14, and large 16x16x16 inches per parcel. Oversize/overweight may incur surcharges or require special handling.</p>
+          </details>
 
-                <details className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 group">
-                  <summary className="font-semibold text-sm sm:text-base text-gray-900 cursor-pointer list-none flex items-center justify-between">
-                    <span>Can I share tracking links?</span>
-                    <span className="text-blue-600 group-open:rotate-180 transition-transform text-sm">▼</span>
-                  </summary>
-                  <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-600 leading-relaxed">Absolutely. Every order receives a unique tracking link that can be shared with anyone. Recipients can view real-time status updates without creating an account.</p>
-                </details>
+          {/* Tracking */}
+          <details className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 group">
+            <summary className="font-semibold text-sm sm:text-base text-gray-900 cursor-pointer list-none flex items-center justify-between">
+              <span>How do I track my parcel?</span>
+              <span className="text-blue-600 group-open:rotate-180 transition-transform text-sm">▼</span>
+            </summary>
+            <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-600 leading-relaxed">Enter your tracking number on jaddpi.com to see real-time status, ETA, and delivery options.</p>
+          </details>
 
-                {/* Payments */}
-                <details className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 group">
-                  <summary className="font-semibold text-sm sm:text-base text-gray-900 cursor-pointer list-none flex items-center justify-between">
-                    <span>What payment methods do you accept?</span>
-                    <span className="text-blue-600 group-open:rotate-180 transition-transform text-sm">▼</span>
-                  </summary>
-                  <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-600 leading-relaxed">We accept major credit cards: Visa, Mastercard, and Amex.</p>
-                </details>
+          <details className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 group">
+            <summary className="font-semibold text-sm sm:text-base text-gray-900 cursor-pointer list-none flex items-center justify-between">
+              <span>Can I share tracking links?</span>
+              <span className="text-blue-600 group-open:rotate-180 transition-transform text-sm">▼</span>
+            </summary>
+            <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-600 leading-relaxed">Absolutely. Every order receives a unique tracking link that can be shared with anyone. Recipients can view real-time status updates without creating an account.</p>
+          </details>
 
-                {/* Cancellation */}
-                <details className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 group">
-                  <summary className="font-semibold text-sm sm:text-base text-gray-900 cursor-pointer list-none flex items-center justify-between">
-                    <span>Can I cancel my order?</span>
-                    <span className="text-blue-600 group-open:rotate-180 transition-transform text-sm">▼</span>
-                  </summary>
-                  <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-600 leading-relaxed">After order placed/dispatch, a cancellation cannot be made, and no refund will be issued.</p>
-                </details>
+          {/* Payments */}
+          <details className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 group">
+            <summary className="font-semibold text-sm sm:text-base text-gray-900 cursor-pointer list-none flex items-center justify-between">
+              <span>What payment methods do you accept?</span>
+              <span className="text-blue-600 group-open:rotate-180 transition-transform text-sm">▼</span>
+            </summary>
+            <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-600 leading-relaxed">We accept major credit cards: Visa, Mastercard, and Amex.</p>
+          </details>
 
-                {/* Delivery Issues */}
-                <details className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 group">
-                  <summary className="font-semibold text-sm sm:text-base text-gray-900 cursor-pointer list-none flex items-center justify-between">
-                    <span>What if the recipient isn't home?</span>
-                    <span className="text-blue-600 group-open:rotate-180 transition-transform text-sm">▼</span>
-                  </summary>
-                  <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-600 leading-relaxed">If the receiver is not available, we'll attempt contact to sender, and return the parcel to sender on the same day.</p>
-                </details>
+          {/* Cancellation */}
+          <details className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 group">
+            <summary className="font-semibold text-sm sm:text-base text-gray-900 cursor-pointer list-none flex items-center justify-between">
+              <span>Can I cancel my order?</span>
+              <span className="text-blue-600 group-open:rotate-180 transition-transform text-sm">▼</span>
+            </summary>
+            <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-600 leading-relaxed">After order placed/dispatch, a cancellation cannot be made, and no refund will be issued.</p>
+          </details>
 
-                {/* Insurance */}
-                <details className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 group">
-                  <summary className="font-semibold text-sm sm:text-base text-gray-900 cursor-pointer list-none flex items-center justify-between">
-                    <span>Is shipment protection/insurance available?</span>
-                    <span className="text-blue-600 group-open:rotate-180 transition-transform text-sm">▼</span>
-                  </summary>
-                  <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-600 leading-relaxed">Yes, optional protection is available at checkout. Coverage, premiums, and claim limits depend on declared value and item category.</p>
-                </details>
+          {/* Delivery Issues */}
+          <details className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 group">
+            <summary className="font-semibold text-sm sm:text-base text-gray-900 cursor-pointer list-none flex items-center justify-between">
+              <span>What if the recipient isn't home?</span>
+              <span className="text-blue-600 group-open:rotate-180 transition-transform text-sm">▼</span>
+            </summary>
+            <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-600 leading-relaxed">If the receiver is not available, we'll attempt contact to sender, and return the parcel to sender on the same day.</p>
+          </details>
 
-                {/* Lost/Damaged */}
-                <details className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 group">
-                  <summary className="font-semibold text-sm sm:text-base text-gray-900 cursor-pointer list-none flex items-center justify-between">
-                    <span>What if my parcel is lost or damaged?</span>
-                    <span className="text-blue-600 group-open:rotate-180 transition-transform text-sm">▼</span>
-                  </summary>
-                  <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-600 leading-relaxed">Report immediately via our support form with tracking number, description, and declared value. We start an investigation with our logistics partners. If confirmed lost, compensation is processed per your purchased protection or, if none, per our standard liability limits (max $50 CAD). Preliminary status within 2-3 business days; final resolution within 7-14 business days.</p>
-                </details>
+          {/* Insurance */}
+          <details className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 group">
+            <summary className="font-semibold text-sm sm:text-base text-gray-900 cursor-pointer list-none flex items-center justify-between">
+              <span>Is shipment protection/insurance available?</span>
+              <span className="text-blue-600 group-open:rotate-180 transition-transform text-sm">▼</span>
+            </summary>
+            <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-600 leading-relaxed">Yes, optional protection is available at checkout. Coverage, premiums, and claim limits depend on declared value and item category.</p>
+          </details>
 
-                {/* Support */}
-                <details className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 group">
-                  <summary className="font-semibold text-sm sm:text-base text-gray-900 cursor-pointer list-none flex items-center justify-between">
-                    <span>How do I contact support?</span>
-                    <span className="text-blue-600 group-open:rotate-180 transition-transform text-sm">▼</span>
-                  </summary>
-                  <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-600 leading-relaxed">You can reach us via the support form on jaddpi.com. Keep your order or tracking number handy.</p>
-                </details>
-              </div>
-            </section>
-      
-          </div>
-        );
-      }
-      
+          {/* Lost/Damaged */}
+          <details className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 group">
+            <summary className="font-semibold text-sm sm:text-base text-gray-900 cursor-pointer list-none flex items-center justify-between">
+              <span>What if my parcel is lost or damaged?</span>
+              <span className="text-blue-600 group-open:rotate-180 transition-transform text-sm">▼</span>
+            </summary>
+            <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-600 leading-relaxed">Report immediately via our support form with tracking number, description, and declared value. We start an investigation with our logistics partners. If confirmed lost, compensation is processed per your purchased protection or, if none, per our standard liability limits (max $50 CAD). Preliminary status within 2-3 business days; final resolution within 7-14 business days.</p>
+          </details>
+
+          {/* Support */}
+          <details className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 group">
+            <summary className="font-semibold text-sm sm:text-base text-gray-900 cursor-pointer list-none flex items-center justify-between">
+              <span>How do I contact support?</span>
+              <span className="text-blue-600 group-open:rotate-180 transition-transform text-sm">▼</span>
+            </summary>
+            <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-600 leading-relaxed">You can reach us via the support form on jaddpi.com. Keep your order or tracking number handy.</p>
+          </details>
+        </div>
+      </section>
+
+    </div>
+  );
+}
