@@ -181,6 +181,11 @@ router.post("/create-order", requireAuth, async (req: Request, res: Response) =>
       throw new ApiError(400, "Package size is required");
     }
 
+    // Validate item photo URL is provided (mandatory for booking)
+    if (!packageDetails?.itemPhotoUrl) {
+      throw new ApiError(400, "Item photo is required");
+    }
+
     if (!pricing || !distance) {
       throw new ApiError(400, "Pricing and distance information are required");
     }
@@ -275,27 +280,8 @@ router.post("/create-order", requireAuth, async (req: Request, res: Response) =>
     const now = new Date();
     const expiresAt = new Date(now.getTime() + 30 * 60 * 1000); // 30 minutes
 
-    // Handle item photo upload if provided
-    let itemPhotoUrl: string | undefined = packageDetails.itemPhotoUrl; // Accept URL if provided
-
-    // Fallback to base64 upload if no URL but photo data exists (backward compatibility)
-    if (!itemPhotoUrl && packageDetails.itemPhoto) {
-      try {
-        logger.info({ orderId }, "Uploading item photo to Cloudinary");
-        const uploadResult = await uploadBase64ToCloudinary(packageDetails.itemPhoto, {
-          folder: `item-photos/${orderId}`,
-          resource_type: "image",
-          quality: "auto",
-          width: 800,
-          crop: "limit"
-        });
-        itemPhotoUrl = uploadResult.secure_url;
-        logger.info({ orderId, photoUrl: itemPhotoUrl }, "Item photo uploaded successfully");
-      } catch (uploadError: any) {
-        logger.error({ orderId, error: uploadError.message }, "Failed to upload item photo");
-        throw new ApiError(400, "Failed to upload item photo. Please try again.");
-      }
-    }
+    // Use the item photo URL provided (already uploaded to Cloudinary in frontend)
+    const itemPhotoUrl = packageDetails.itemPhotoUrl;
 
     // Create order
     const order = await DeliveryOrder.create({
@@ -337,7 +323,7 @@ router.post("/create-order", requireAuth, async (req: Request, res: Response) =>
         size: packageDetails.size,
         weight: packageDetails.weight,
         description: packageDetails.description,
-        itemPhotoUrl: itemPhotoUrl || packageDetails.itemPhotoUrl,
+        itemPhotoUrl: itemPhotoUrl,
         itemPrice: packageDetails.itemPrice
       },
       pricing: finalPricing,
