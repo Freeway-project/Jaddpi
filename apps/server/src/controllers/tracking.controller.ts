@@ -29,7 +29,7 @@ export const TrackingController = {
       // Get driver location if driver is assigned and order is active
       let driverLocation = null;
       if (
-        order.driverId && 
+        order.driverId &&
         ['assigned', 'picked_up', 'in_transit'].includes(order.status)
       ) {
         try {
@@ -86,6 +86,8 @@ export const TrackingController = {
             package: {
               size: order.package.size,
               description: order.package.description,
+              itemPhotoUrl: order.package.itemPhotoUrl,
+              itemPrice: order.package.itemPrice,
             },
             distance: order.distance,
             timeline: order.timeline,
