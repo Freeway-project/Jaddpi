@@ -728,20 +728,49 @@ export default function TrackOrderPage() {
 
       {/* Full Screen Image Modal */}
       {selectedImage && (
-        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
-          <div className="relative max-w-2xl w-full">
-            <button
-              onClick={() => setSelectedImage(null)}
-              className="absolute top-4 right-4 bg-white/90 hover:bg-white p-2 rounded-full transition-colors z-10"
-            >
-              <X className="w-5 h-5 text-gray-900" />
-            </button>
-            <img
-              src={selectedImage.url}
-              alt="Selected Item"
-              className="w-full h-auto rounded-lg"
-            />
-            <p className="text-white text-center mt-4 text-sm font-medium">{selectedImage.title}</p>
+        <div
+          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
+          onClick={() => setSelectedImage(null)}
+        >
+          <div
+            className="relative max-w-4xl w-full bg-white rounded-2xl overflow-hidden shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="bg-white border-b border-gray-200 px-4 sm:px-6 py-4 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                  <ImageIcon className="w-5 h-5 text-blue-600" />
+                </div>
+                <div>
+                  <h3 className="text-base sm:text-lg font-bold text-gray-900">{selectedImage.title}</h3>
+                  <p className="text-xs text-gray-500">Click outside or press X to close</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setSelectedImage(null)}
+                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                aria-label="Close"
+              >
+                <X className="w-6 h-6 text-gray-900" />
+              </button>
+            </div>
+
+            {/* Image Container */}
+            <div className="bg-gray-100 p-4 sm:p-6 flex items-center justify-center max-h-[70vh]">
+              <img
+                src={selectedImage.url}
+                alt={selectedImage.title}
+                className="max-w-full max-h-full object-contain rounded-lg shadow-lg"
+              />
+            </div>
+
+            {/* Footer */}
+            <div className="bg-white border-t border-gray-200 px-4 sm:px-6 py-3">
+              <p className="text-xs sm:text-sm text-gray-600 text-center">
+                Photo uploaded for verification purposes only
+              </p>
+            </div>
           </div>
         </div>
       )}

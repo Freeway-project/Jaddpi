@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { User, MapPin, Package, X, Home, Menu } from 'lucide-react';
 import { Button } from '@workspace/ui/components/button';
@@ -51,6 +51,8 @@ export default function BookingFlow({
   const router = useRouter();
   const { user, isAuthenticated } = useAuthStore();
   const [currentStep, setCurrentStep] = useState<BookingStep>('sender');
+  const [stepAnnouncement, setStepAnnouncement] = useState('');
+  const mainContentRef = useRef<HTMLDivElement>(null);
 
   // Check authentication on mount and when navigating to payment step
   useEffect(() => {
@@ -184,16 +186,39 @@ export default function BookingFlow({
   ];
 
   const handleNext = () => {
-    if (currentStep === 'sender') setCurrentStep('recipient');
-    else if (currentStep === 'recipient') setCurrentStep('review');
-    else if (currentStep === 'review') setCurrentStep('payment');
+    let nextStep: BookingStep | null = null;
+    if (currentStep === 'sender') nextStep = 'recipient';
+    else if (currentStep === 'recipient') nextStep = 'review';
+    else if (currentStep === 'review') nextStep = 'payment';
+
+    if (nextStep) {
+      setCurrentStep(nextStep);
+      // Announce step change to screen readers
+      const stepLabels = { sender: 'Sender Details', recipient: 'Recipient Details', review: 'Review Order', payment: 'Payment' };
+      setStepAnnouncement(`Now on step ${steps.findIndex(s => s.id === nextStep) + 1} of ${steps.length}: ${stepLabels[nextStep]}`);
+      // Scroll to top of content
+      mainContentRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   const handlePrevious = () => {
-    if (currentStep === 'payment') setCurrentStep('review');
-    else if (currentStep === 'review') setCurrentStep('recipient');
-    else if (currentStep === 'recipient') setCurrentStep('sender');
-    else if (currentStep === 'sender' && onBack) onBack();
+    let prevStep: BookingStep | null = null;
+    if (currentStep === 'payment') prevStep = 'review';
+    else if (currentStep === 'review') prevStep = 'recipient';
+    else if (currentStep === 'recipient') prevStep = 'sender';
+    else if (currentStep === 'sender' && onBack) {
+      onBack();
+      return;
+    }
+
+    if (prevStep) {
+      setCurrentStep(prevStep);
+      // Announce step change to screen readers
+      const stepLabels = { sender: 'Sender Details', recipient: 'Recipient Details', review: 'Review Order', payment: 'Payment' };
+      setStepAnnouncement(`Returned to step ${steps.findIndex(s => s.id === prevStep) + 1} of ${steps.length}: ${stepLabels[prevStep]}`);
+      // Scroll to top of content
+      mainContentRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   const canProceed = () => {
@@ -204,12 +229,18 @@ export default function BookingFlow({
       return recipient.name && recipient.phone && recipient.address;
     }
     if (currentStep === 'review') {
-      return !!itemPhoto; // Item photo is mandatory (base64 or URL)
+      return !!itemPhotoUrl; // Item photo URL is mandatory (Cloudinary URL)
     }
     return true;
   };
 
   const handleCreateOrder = async () => {
+    // Validate item photo URL before proceeding
+    if (!itemPhotoUrl) {
+      toast.error('Item photo is required. Please upload a photo.');
+      return;
+    }
+
     setIsCreatingOrder(true);
     try {
       const orderData = {
@@ -228,8 +259,7 @@ export default function BookingFlow({
         package: {
           size: initialPackageSize,
           description: recipient.notes || sender.notes,
-          itemPhoto: itemPhoto, // Send base64 as fallback
-          itemPhotoUrl: itemPhotoUrl, // Send URL if available
+          itemPhotoUrl: itemPhotoUrl, // Cloudinary URL (mandatory)
           itemPrice: itemPrice ? Math.round(parseFloat(itemPrice) * 100) : undefined, // Convert to cents
         },
         pricing: estimate.data.fare,
@@ -287,6 +317,21 @@ export default function BookingFlow({
 
   return (
     <>
+      {/* Skip to main content for accessibility */}
+      <a href="#main-content" className="skip-to-main">
+        Skip to main content
+      </a>
+
+      {/* Live region for screen reader announcements */}
+      <div
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        className="sr-only"
+      >
+        {stepAnnouncement}
+      </div>
+
       {/* ========== MOBILE LAYOUT (Uber-like with Map) ========== */}
       <div className="lg:hidden h-full flex flex-col bg-white">
         {/* Map Section - Top 40% */}
@@ -380,7 +425,14 @@ export default function BookingFlow({
         {/* Form Section - Bottom 60% (Uber-style rounded top) */}
         <div className="flex-1 flex flex-col bg-gray-50 rounded-t-3xl -mt-4 relative z-10 shadow-2xl min-h-0">
           {/* Scrollable Content */}
-          <div className="flex-1 overflow-y-auto px-4 pt-6 pb-24 min-h-0">
+          <div
+            ref={mainContentRef}
+            id="main-content"
+            className="flex-1 overflow-y-auto px-4 pt-6 pb-24 min-h-0"
+            role="main"
+            aria-label="Booking form content"
+            tabIndex={-1}
+          >
             <div className="pb-4">
               {currentStep === 'sender' && (
                 <UserInfoForm
@@ -433,7 +485,11 @@ export default function BookingFlow({
           </div>
 
           {/* Action Buttons - Fixed at bottom (Uber-style) */}
-          <div className="shrink-0 bg-white border-t border-gray-200 p-4 shadow-lg sticky bottom-0">
+          <div
+            className="shrink-0 bg-white border-t border-gray-200 p-4 shadow-lg sticky bottom-0"
+            role="navigation"
+            aria-label="Step navigation"
+          >
             <div className="flex gap-3">
               {currentStep !== 'sender' && (
                 <button
@@ -517,7 +573,14 @@ export default function BookingFlow({
           </div>
 
           {/* Scrollable Content */}
-          <div className="flex-1 overflow-y-auto px-6 py-4">
+          <div
+            ref={mainContentRef}
+            id="main-content"
+            className="flex-1 overflow-y-auto px-6 py-4"
+            role="main"
+            aria-label="Booking form content"
+            tabIndex={-1}
+          >
             {/* Fare Estimate Summary */}
             {currentStep !== 'review' && currentStep !== 'payment' && (
               <div className="mb-4">
@@ -578,7 +641,11 @@ export default function BookingFlow({
           </div>
 
           {/* Action Buttons - Fixed at bottom */}
-          <div className="shrink-0 border-t border-gray-200 bg-white p-4">
+          <div
+            className="shrink-0 border-t border-gray-200 bg-white p-4"
+            role="navigation"
+            aria-label="Step navigation"
+          >
             <div className="flex gap-3">
               {currentStep !== 'sender' && (
                 <Button
