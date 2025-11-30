@@ -5,6 +5,7 @@ import { SmsRateLimitService } from "../services/smsRateLimit.service";
 import { ApiError } from "../utils/ApiError";
 import { EarlyAccessRequest } from "../models/EarlyAccessRequest";
 import { sendDriverNotification } from "../services/notificationService";
+import { WebhookEvent } from "../models/WebhookEvent";
 
 export class AdminController {
   /**
@@ -438,6 +439,42 @@ export class AdminController {
       res.json({
         success: true,
         data: details,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Get webhook logs
+   * GET /api/admin/webhook-logs
+   */
+  static async getWebhookLogs(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { page = 1, limit = 50, eventType } = req.query;
+      const skip = (Number(page) - 1) * Number(limit);
+
+      const filter = eventType ? { eventType } : {};
+
+      const [logs, total] = await Promise.all([
+        WebhookEvent.find(filter)
+          .sort({ receivedAt: -1 })
+          .skip(skip)
+          .limit(Number(limit)),
+        WebhookEvent.countDocuments(filter)
+      ]);
+
+      res.json({
+        success: true,
+        data: {
+          logs,
+          pagination: {
+            page: Number(page),
+            limit: Number(limit),
+            total,
+            pages: Math.ceil(total / Number(limit))
+          }
+        }
       });
     } catch (error) {
       next(error);

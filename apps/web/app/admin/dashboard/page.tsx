@@ -3,13 +3,13 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { adminAPI, DashboardStats, Activity, Order, SystemMetrics, User } from '../../../lib/api/admin';
-import { Package, Users, DollarSign, Activity as ActivityIcon, TrendingUp, Clock, LogOut, Search, Filter, ChevronLeft, ChevronRight, Eye, Phone, Mail, MapPin, Calendar } from 'lucide-react';
+import { Package, Users, DollarSign, Activity as ActivityIcon, TrendingUp, Clock, LogOut, Search, Filter, ChevronLeft, ChevronRight, Eye, Phone, Mail, MapPin, Calendar, FileText } from 'lucide-react';
 import { useAuthStore } from '../../../lib/stores/authStore';
 import { Button } from '@workspace/ui/components/button';
 import { Input } from '@workspace/ui/components/input';
 import toast from 'react-hot-toast';
 
-type Tab = 'overview' | 'orders' | 'users';
+type Tab = 'overview' | 'orders' | 'users' | 'logs';
 
 type Filters = {
   limit: number;
@@ -32,6 +32,8 @@ export default function AdminDashboard() {
   const [usersLoading, setUsersLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [webhookLogs, setWebhookLogs] = useState<any[]>([]);
+  const [logsLoading, setLogsLoading] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -48,6 +50,8 @@ export default function AdminDashboard() {
   useEffect(() => {
     if (activeTab === 'orders') {
       loadAllOrders();
+    } else if (activeTab === 'logs') {
+      fetchWebhookLogs();
     } else if (activeTab === 'users') {
       loadAllUsers();
     }
@@ -87,6 +91,22 @@ export default function AdminDashboard() {
       toast.error('Failed to load orders');
     } finally {
       setOrdersLoading(false);
+    }
+  };
+
+  const fetchWebhookLogs = async () => {
+    setLogsLoading(true);
+    try {
+      const response = await fetch('/api/admin/webhook-logs');
+      const data = await response.json();
+      if (data.success) {
+        setWebhookLogs(data.data.logs);
+      }
+    } catch (error) {
+      console.error('Failed to load webhook logs:', error);
+      toast.error('Failed to load webhook logs');
+    } finally {
+      setLogsLoading(false);
     }
   };
 
@@ -145,6 +165,7 @@ export default function AdminDashboard() {
               { key: 'overview' as Tab, label: 'Overview', icon: TrendingUp },
               { key: 'orders' as Tab, label: 'All Orders', icon: Package },
               { key: 'users' as Tab, label: 'Users', icon: Users },
+              { key: 'logs' as Tab, label: 'Webhook Logs', icon: FileText },
             ].map(({ key, label, icon: Icon }) => (
               <button
                 key={key}

@@ -137,4 +137,11 @@ router.patch(
   AdminController.updateAdminNote
 );
 
+// Webhook logs route
+router.get(
+  "/webhook-logs",
+  activityLogger,
+  AdminController.getWebhookLogs
+);
+
 export default router;

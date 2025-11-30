@@ -9,6 +9,7 @@ import { logger } from '../utils/logger';
 import { ApiError } from '../utils/ApiError';
 import { sendDriverNotification } from '../services/notificationService';
 import Stripe from 'stripe';
+import { WebhookEvent } from '../models/WebhookEvent';
 
 export const WebhookController = {
   /**
@@ -39,14 +40,32 @@ export const WebhookController = {
       return res.status(400).send(`Webhook Error: ${err.message}`);
     }
 
-    try {
+    // Log the full event for debugging
+    logger.info({
+      eventId: event.id,
+      eventType: event.type,
+      eventData: event.data,
+    }, 'Received Stripe Webhook Event');
+
+      // Store the event in the database for future reference
+      try {
+        await WebhookEvent.create({
+          eventId: event.id,
+          eventType: event.type,
+          eventData: event.data,
+          receivedAt: new Date(),
+          processed: false
+        });
+        logger.info({ eventId: event.id }, 'Webhook event stored in database');
+      } catch (dbError) {
+        logger.error({ error: dbError, eventId: event.id }, 'Failed to store webhook event');
+      }    try {
       // Idempotency check: Have we already processed this event?
       const alreadyProcessed = await PaymentService.isEventProcessed(event.id);
       if (alreadyProcessed) {
         logger.info(`⚠️  Event ${event.id} already processed, skipping`);
         return res.json({ received: true, status: 'already_processed' });
       }
-
 
       switch (event.type) {
         case 'payment_intent.created':
@@ -94,6 +113,7 @@ async function handlePaymentIntentCreated(event: Stripe.Event) {
   const paymentIntent = event.data.object as Stripe.PaymentIntent;
   logger.info(`PaymentIntent created: ${paymentIntent.id}`);
   // Already created in our database when client initiated payment
+  console.log('Payment Intent Created:', paymentIntent);
 }
 
 /**
@@ -166,7 +186,7 @@ async function handlePaymentIntentSucceeded(event: Stripe.Event) {
 
       // Send notifications to all drivers concurrently
       const notificationResults = await Promise.allSettled(
-        drivers.map(driver =>
+        drivers.map((driver: any) =>
           sendDriverNotification(driver._id.toString(), {
             title: "New Delivery Request",
             body: `New order ${order.orderId}. From ${order.pickup?.address || 'Pickup'} to ${order.dropoff?.address || 'Dropoff'}. CAD${order.pricing?.total?.toFixed(2) || '0'}`,
@@ -180,8 +200,8 @@ async function handlePaymentIntentSucceeded(event: Stripe.Event) {
         )
       );
 
-      const successCount = notificationResults.filter(r => r.status === 'fulfilled').length;
-      logger.info({ successCount, totalDrivers: drivers.length, orderId: order.orderId }, `Driver notifications sent: ${successCount}/${drivers.length}`);
+      const successCount = notificationResults.filter((r: PromiseSettledResult<any>) => r.status === 'fulfilled').length;
+      const failCount = notificationResults.filter((r: PromiseSettledResult<any>) => r.status === 'rejected').length;
     } catch (notifError) {
       logger.error({ error: notifError, orderId: order.orderId }, "Failed to send driver notifications");
       // Don't fail the webhook if notifications fail
