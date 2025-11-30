@@ -346,7 +346,7 @@
           {{/fees}}
           {{#hasDiscount}}
           <tr class="discount-row">
-            <td>Discount {{#couponCode}}({{couponCode}}){{/couponCode}}</td>
+            <td>Discount{{#if couponCode}} ({{couponCode}}){{/if}}</td>
             <td class="amount">-{{discount}}</td>
           </tr>
           {{/hasDiscount}}
