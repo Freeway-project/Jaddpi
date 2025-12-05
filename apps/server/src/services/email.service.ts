@@ -15,6 +15,7 @@ export interface SendEmailData {
   text?: string;
   templateName?: string;
   templateVariables?: Record<string, any>;
+  bcc?: string | string[];
 }
 
 export const EmailService = {
@@ -73,13 +74,16 @@ export const EmailService = {
   },
 
   async sendEmail(data: SendEmailData): Promise<void> {
-    const { to, subject, html, text } = data;
+    const { to, subject, html, text, bcc } = data;
 
     if (!emailTransporter) {
       // Fallback to console logging if no email transporter configured
       logger.warn("⚠️  No email transporter configured. Logging email to console:");
       logger.info(`📧 Email to ${to}:`);
       logger.info(`Subject: ${subject}`);
+      if (bcc) {
+        logger.info(`BCC: ${Array.isArray(bcc) ? bcc.join(', ') : bcc}`);
+      }
       if (text) {
         logger.info(`Text content:\n${text}`);
       }
@@ -88,13 +92,17 @@ export const EmailService = {
     }
 
     try {
-      const mailOptions = {
+      const mailOptions: any = {
         from: `${emailConfig.from.name} <${emailConfig.from.email}>`,
         to,
         subject,
         text,
         html,
       };
+
+      if (bcc) {
+        mailOptions.bcc = bcc;
+      }
 
       const result = await emailTransporter.sendMail(mailOptions);
 

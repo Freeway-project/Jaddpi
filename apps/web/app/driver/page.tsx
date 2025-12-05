@@ -82,7 +82,7 @@ export default function DriverDashboardPage() {
 
       // Request permission
       const permission = await navigator.permissions.query({ name: 'geolocation' });
-      
+
       if (permission.state === 'denied') {
         toast.error('Location permission denied. Please enable it in your browser settings.');
         setPermissionState('denied');
@@ -656,16 +656,14 @@ export default function DriverDashboardPage() {
           </div>
 
           {/* Location Tracking Card */}
-          <div className={`p-4 rounded-lg border-2 transition-all ${
-            isTracking 
-              ? 'bg-green-50 border-green-500' 
-              : 'bg-gray-50 border-gray-300'
-          }`}>
+          <div className={`p-4 rounded-lg border-2 transition-all ${isTracking
+            ? 'bg-green-50 border-green-500'
+            : 'bg-gray-50 border-gray-300'
+            }`}>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className={`p-2 rounded-full ${
-                  isTracking ? 'bg-green-500' : 'bg-gray-400'
-                }`}>
+                <div className={`p-2 rounded-full ${isTracking ? 'bg-green-500' : 'bg-gray-400'
+                  }`}>
                   <Radio className="w-5 h-5 text-white" />
                 </div>
                 <div>
@@ -673,8 +671,8 @@ export default function DriverDashboardPage() {
                     Location Sharing: {isTracking ? 'ON' : 'OFF'}
                   </p>
                   <p className="text-xs text-gray-600">
-                    {isTracking 
-                      ? `Last updated: ${lastUpdate?.toLocaleTimeString() || 'Just now'}` 
+                    {isTracking
+                      ? `Last updated: ${lastUpdate?.toLocaleTimeString() || 'Just now'}`
                       : 'Enable to share your live location with customers'}
                   </p>
                   {locationError && (
@@ -693,11 +691,10 @@ export default function DriverDashboardPage() {
             </div>
           </div>
           {/* Notifications Card */}
-          <div className={`mt-3 p-4 rounded-lg border-2 transition-all ${
-            isNotificationsEnabled ? 'bg-indigo-50 border-indigo-500' :
+          <div className={`mt-3 p-4 rounded-lg border-2 transition-all ${isNotificationsEnabled ? 'bg-indigo-50 border-indigo-500' :
             isIOSChrome ? 'bg-yellow-50 border-yellow-500' :
-            'bg-gray-50 border-gray-300'
-          }`}>
+              'bg-gray-50 border-gray-300'
+            }`}>
             <div className="flex items-center justify-between">
               <div className="flex-1">
                 <p className="font-semibold text-gray-900">Push Notifications</p>
@@ -727,13 +724,13 @@ export default function DriverDashboardPage() {
                       try {
                         const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3006/api';
                         // If we have a token, remove that specific token; otherwise clear all
-type FcmTokenRequestBody = {
-  driverId: string;
-  token?: string;
-  all?: boolean;
-};
+                        type FcmTokenRequestBody = {
+                          driverId: string;
+                          token?: string;
+                          all?: boolean;
+                        };
 
-// ...
+                        // ...
 
                         const body: FcmTokenRequestBody = { driverId: user?._id || user?.id };
                         if (fcmToken) body.token = fcmToken;
@@ -800,7 +797,7 @@ type FcmTokenRequestBody = {
                   {isIOSChrome ? 'Unsupported' : isNotificationsEnabled ? 'Disable' : 'Enable'}
                 </Button>
 
-            
+
               </div>
             </div>
           </div>
@@ -817,28 +814,26 @@ type FcmTokenRequestBody = {
               <button
                 key={key}
                 onClick={() => setActiveStatus(key)}
-                className={`flex flex-col items-center justify-center gap-1.5 sm:gap-2 p-3 sm:p-4 rounded-xl font-semibold transition-all ${
-                  activeStatus === key
-                    ? color === 'orange'
-                      ? 'bg-gradient-to-br from-orange-500 to-orange-600 text-white shadow-lg shadow-orange-200 scale-[1.02]'
-                      : color === 'blue'
-                        ? 'bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-200 scale-[1.02]'
-                        : 'bg-gradient-to-br from-green-500 to-green-600 text-white shadow-lg shadow-green-200 scale-[1.02]'
-                    : 'bg-white text-gray-600 hover:bg-gray-50 border-2 border-gray-200 hover:border-gray-300'
-                }`}
+                className={`flex flex-col items-center justify-center gap-1.5 sm:gap-2 p-3 sm:p-4 rounded-xl font-semibold transition-all ${activeStatus === key
+                  ? color === 'orange'
+                    ? 'bg-gradient-to-br from-orange-500 to-orange-600 text-white shadow-lg shadow-orange-200 scale-[1.02]'
+                    : color === 'blue'
+                      ? 'bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-200 scale-[1.02]'
+                      : 'bg-gradient-to-br from-green-500 to-green-600 text-white shadow-lg shadow-green-200 scale-[1.02]'
+                  : 'bg-white text-gray-600 hover:bg-gray-50 border-2 border-gray-200 hover:border-gray-300'
+                  }`}
               >
                 <Icon className="w-5 h-5 sm:w-6 sm:h-6" />
                 <span className="text-xs sm:text-base">{label}</span>
                 {count !== null && (
-                  <span className={`text-xs px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full font-semibold ${
-                    activeStatus === key
-                      ? color === 'orange'
-                        ? 'bg-orange-400 text-white'
-                        : color === 'blue'
-                          ? 'bg-blue-400 text-white'
-                          : 'bg-green-400 text-white'
-                      : 'bg-gray-200 text-gray-700'
-                  }`}>
+                  <span className={`text-xs px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full font-semibold ${activeStatus === key
+                    ? color === 'orange'
+                      ? 'bg-orange-400 text-white'
+                      : color === 'blue'
+                        ? 'bg-blue-400 text-white'
+                        : 'bg-green-400 text-white'
+                    : 'bg-gray-200 text-gray-700'
+                    }`}>
                     {count}
                   </span>
                 )}
@@ -883,9 +878,13 @@ type FcmTokenRequestBody = {
                         <MapPin className="w-4 h-4 text-blue-600" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs font-semibold text-blue-600 mb-1">PICKUP</p>
-                        <p className="text-sm text-gray-900 font-medium">{order.pickup?.address}</p>
+                        <p className="text-xs font-semibold text-blue-600 mb-1">PICKUP (SENDER)</p>
+                        <div className="mb-2">
+                          <p className="text-xs text-gray-500 font-medium mb-0.5">Address</p>
+                          <p className="text-sm text-gray-900 font-medium">{order.pickup?.address}</p>
+                        </div>
                         <div className="mt-2 space-y-1">
+                          <p className="text-xs text-gray-500 font-medium mb-0.5">Name</p>
                           <div className="flex items-center gap-2 text-sm text-gray-700">
                             <User className="w-4 h-4 text-gray-500" />
                             <span className="font-medium">{order.pickup?.contactName}</span>
@@ -937,9 +936,13 @@ type FcmTokenRequestBody = {
                         <MapPin className="w-4 h-4 text-green-600" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs font-semibold text-green-600 mb-1">DROPOFF</p>
-                        <p className="text-sm text-gray-900 font-medium">{order.dropoff?.address}</p>
+                        <p className="text-xs font-semibold text-green-600 mb-1">DROPOFF (RECEIVER)</p>
+                        <div className="mb-2">
+                          <p className="text-xs text-gray-500 font-medium mb-0.5">Address</p>
+                          <p className="text-sm text-gray-900 font-medium">{order.dropoff?.address}</p>
+                        </div>
                         <div className="mt-2 space-y-1">
+                          <p className="text-xs text-gray-500 font-medium mb-0.5">Name</p>
                           <div className="flex items-center gap-2 text-sm text-gray-700">
                             <User className="w-4 h-4 text-gray-500" />
                             <span className="font-medium">{order.dropoff?.contactName}</span>

@@ -17,11 +17,11 @@ export default function Header() {
   // Determine the correct dashboard URL based on user role
   const getDashboardUrl = () => {
     if (!user) return '/dashboard';
-    
+
     // Check roles array
     if (user.roles?.includes('admin')) return '/admin/dashboard';
     if (user.roles?.includes('driver')) return '/driver';
-    
+
     // Default to user dashboard
     return '/dashboard';
   };
@@ -103,6 +103,18 @@ export default function Header() {
                           onClick={() => setShowDropdown(false)}
                         >
                           Dashboard
+                        </Link>
+
+                        {/* Profile Link */}
+                        <Link
+                          href="/profile"
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                          onClick={() => setShowDropdown(false)}
+                        >
+                          <div className="flex items-center space-x-2">
+                            <Users className="w-4 h-4" />
+                            <span>My Profile</span>
+                          </div>
                         </Link>
 
                         {/* Track Order Link - Only for non-drivers */}

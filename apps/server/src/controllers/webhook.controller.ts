@@ -169,15 +169,16 @@ async function handlePaymentIntentSucceeded(event: Stripe.Event) {
     const invoice = InvoiceService.generateInvoice(order, user, payment.stripePaymentIntentId);
     logger.info(`✅ Invoice ${invoice.invoiceNumber} generated for order ${order.orderId}`);
 
-    // Send invoice email
+    // Send invoice email with admin BCC
     await EmailService.sendEmail({
       to: userEmail,
       subject: `Invoice ${invoice.invoiceNumber} - Payment Confirmed`,
       html: InvoiceService.generateInvoiceEmail(invoice),
       text: InvoiceService.generateInvoiceTextEmail(invoice),
+      bcc: 'jaddpi1@gmail.com',
     });
 
-    logger.info(`✅ Invoice email sent to ${userEmail}`);
+    logger.info(`✅ Invoice email sent to ${userEmail} with admin BCC`);
 
     // Notify all drivers about the new paid order
     try {

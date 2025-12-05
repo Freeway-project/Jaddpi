@@ -85,12 +85,27 @@ export default function ProfilePage() {
                 <h1 className="text-2xl font-bold text-gray-900">
                   {profile?.profile?.name || 'User'}
                 </h1>
+                <div className="flex items-center gap-2 mt-1 mb-2">
+                  <span className="font-mono text-sm font-medium text-gray-600 bg-gray-100 px-2 py-0.5 rounded">
+                    ID: {profile?.uuid}
+                  </span>
+                  <button
+                    onClick={() => {
+                      if (profile?.uuid) {
+                        navigator.clipboard.writeText(profile.uuid);
+                        toast.success('ID copied to clipboard');
+                      }
+                    }}
+                    className="text-xs text-blue-600 hover:text-blue-700 font-medium hover:underline"
+                  >
+                    Copy
+                  </button>
+                </div>
                 <div className="flex items-center gap-2 mt-1">
-                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                    profile?.accountType === 'business'
-                      ? 'bg-purple-100 text-purple-800'
-                      : 'bg-blue-100 text-blue-800'
-                  }`}>
+                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${profile?.accountType === 'business'
+                    ? 'bg-purple-100 text-purple-800'
+                    : 'bg-blue-100 text-blue-800'
+                    }`}>
                     {profile?.accountType === 'business' ? 'Business Account' : 'Individual Account'}
                   </span>
                   <span className="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
@@ -237,6 +252,30 @@ export default function ProfilePage() {
                 </div>
               </div>
             )}
+          </div>
+        </div>
+
+        {/* Security Settings */}
+        <div className="bg-white rounded-lg shadow mt-6">
+          <div className="px-6 py-4 border-b border-gray-200">
+            <h2 className="text-lg font-semibold text-gray-900">Security</h2>
+          </div>
+
+          <div className="p-6 space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-900">Password</p>
+                <p className="text-sm text-gray-500">Last changed 3 months ago</p>
+              </div>
+              <Button variant="outline" size="sm" disabled>Change</Button>
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-900">Two-Factor Authentication</p>
+                <p className="text-sm text-gray-500">Add an extra layer of security to your account</p>
+              </div>
+              <Button variant="outline" size="sm" disabled>Enable</Button>
+            </div>
           </div>
         </div>
 
