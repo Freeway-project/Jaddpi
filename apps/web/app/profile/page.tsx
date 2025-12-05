@@ -164,7 +164,7 @@ export default function ProfilePage() {
                 </div>
                 <div>
                   <p className="text-sm text-gray-500">Address</p>
-                  <p className="text-base font-medium text-gray-900">
+                  <p className="text-base font-medium text-gray-900 break-words">
                     {profile.profile.address}
                   </p>
                 </div>

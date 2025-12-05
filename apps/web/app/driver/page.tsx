@@ -20,10 +20,15 @@ const getRouteDirectionsUrl = (
   pickupLat: number,
   pickupLng: number,
   dropoffLat: number,
-  dropoffLng: number
+  dropoffLng: number,
+  pickupAddress?: string,
+  dropoffAddress?: string
 ) => {
-  // Shows full route from pickup to dropoff in Google Maps
-  return `https://www.google.com/maps/dir/?api=1&origin=${pickupLat},${pickupLng}&destination=${dropoffLat},${dropoffLng}&travelmode=driving`;
+  // Use addresses if available for better context in Maps, otherwise fall back to coordinates
+  const origin = pickupAddress ? encodeURIComponent(pickupAddress) : `${pickupLat},${pickupLng}`;
+  const destination = dropoffAddress ? encodeURIComponent(dropoffAddress) : `${dropoffLat},${dropoffLng}`;
+  
+  return `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&travelmode=driving`;
 };
 
 export default function DriverDashboardPage() {
@@ -881,7 +886,7 @@ export default function DriverDashboardPage() {
                         <p className="text-xs font-semibold text-blue-600 mb-1">PICKUP (SENDER)</p>
                         <div className="mb-2">
                           <p className="text-xs text-gray-500 font-medium mb-0.5">Address</p>
-                          <p className="text-sm text-gray-900 font-medium">{order.pickup?.address}</p>
+                          <p className="text-sm text-gray-900 font-medium break-words">{order.pickup?.address}</p>
                         </div>
                         <div className="mt-2 space-y-1">
                           <p className="text-xs text-gray-500 font-medium mb-0.5">Name</p>
@@ -939,7 +944,7 @@ export default function DriverDashboardPage() {
                         <p className="text-xs font-semibold text-green-600 mb-1">DROPOFF (RECEIVER)</p>
                         <div className="mb-2">
                           <p className="text-xs text-gray-500 font-medium mb-0.5">Address</p>
-                          <p className="text-sm text-gray-900 font-medium">{order.dropoff?.address}</p>
+                          <p className="text-sm text-gray-900 font-medium break-words">{order.dropoff?.address}</p>
                         </div>
                         <div className="mt-2 space-y-1">
                           <p className="text-xs text-gray-500 font-medium mb-0.5">Name</p>
@@ -991,7 +996,9 @@ export default function DriverDashboardPage() {
                         order.pickup.coordinates.lat,
                         order.pickup.coordinates.lng,
                         order.dropoff.coordinates.lat,
-                        order.dropoff.coordinates.lng
+                        order.dropoff.coordinates.lng,
+                        order.pickup.address,
+                        order.dropoff.address
                       ), '_blank')}
                       className="w-full mt-3 flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-lg transition-colors"
                     >
