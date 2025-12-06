@@ -27,7 +27,7 @@ const getRouteDirectionsUrl = (
   // Use addresses if available for better context in Maps, otherwise fall back to coordinates
   const origin = pickupAddress ? encodeURIComponent(pickupAddress) : `${pickupLat},${pickupLng}`;
   const destination = dropoffAddress ? encodeURIComponent(dropoffAddress) : `${dropoffLat},${dropoffLng}`;
-  
+
   return `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&travelmode=driving`;
 };
 
@@ -489,7 +489,7 @@ export default function DriverDashboardPage() {
           size="sm"
           onClick={() => handleUpdateStatus(order._id, 'picked_up')}
           disabled={isLoading}
-          className="w-full"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white"
         >
           {isLoading ? (
             <div className="flex items-center justify-center gap-2">
@@ -511,7 +511,6 @@ export default function DriverDashboardPage() {
             <>
               <Button
                 size="sm"
-                variant="outline"
                 onClick={() => setPhotoCaptureModal({
                   show: true,
                   orderId: order._id,
@@ -519,7 +518,7 @@ export default function DriverDashboardPage() {
                   orderIdStr: order.orderId
                 })}
                 disabled={isLoading}
-                className="w-full border-blue-600 text-blue-600 hover:bg-blue-50"
+                className="w-full bg-blue-600 text-white hover:bg-blue-700 shadow-sm"
               >
                 <Camera className="w-4 h-4 mr-2" />
                 Capture Pickup Photo (Required)
@@ -537,7 +536,7 @@ export default function DriverDashboardPage() {
             size="sm"
             onClick={() => handleUpdateStatus(order._id, 'in_transit')}
             disabled={isLoading || !hasPickupPhoto}
-            className="w-full"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white"
           >
             {isLoading ? (
               <div className="flex items-center justify-center gap-2">
@@ -560,7 +559,6 @@ export default function DriverDashboardPage() {
             <>
               <Button
                 size="sm"
-                variant="outline"
                 onClick={() => setPhotoCaptureModal({
                   show: true,
                   orderId: order._id,
@@ -568,7 +566,7 @@ export default function DriverDashboardPage() {
                   orderIdStr: order.orderId
                 })}
                 disabled={isLoading}
-                className="w-full border-green-600 text-green-600 hover:bg-green-50"
+                className="w-full bg-green-600 text-white hover:bg-green-700 shadow-sm"
               >
                 <Camera className="w-4 h-4 mr-2" />
                 Capture Dropoff Photo (Required)
@@ -879,56 +877,69 @@ export default function DriverDashboardPage() {
                   <div className="space-y-3">
                     {/* Pickup Location */}
                     <div className="flex items-start gap-3">
-                      <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+                      <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0 mt-1">
                         <MapPin className="w-4 h-4 text-blue-600" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs font-semibold text-blue-600 mb-1">PICKUP (SENDER)</p>
-                        <div className="mb-2">
-                          <p className="text-xs text-gray-500 font-medium mb-0.5">Address</p>
-                          <p className="text-sm text-gray-900 font-medium break-words">{order.pickup?.address}</p>
+                        <p className="text-xs font-bold text-blue-600 mb-1 tracking-wider uppercase">PICKUP (SENDER)</p>
+
+                        {/* Address */}
+                        <div className="mb-3">
+                          <p className="text-sm text-gray-900 font-semibold leading-snug break-words">
+                            {order.pickup?.address}
+                          </p>
                         </div>
-                        <div className="mt-2 space-y-1">
-                          <p className="text-xs text-gray-500 font-medium mb-0.5">Name</p>
-                          <div className="flex items-center gap-2 text-sm text-gray-700">
-                            <User className="w-4 h-4 text-gray-500" />
-                            <span className="font-medium">{order.pickup?.contactName}</span>
+
+                        {/* Contact Info Card */}
+                        <div className="bg-white rounded-md border border-blue-100 shadow-sm p-3 mb-3">
+                          <div className="flex items-center gap-3 mb-3 border-b border-gray-100 pb-2">
+                            <div className="bg-blue-50 p-1.5 rounded-full">
+                              <User className="w-4 h-4 text-blue-600" />
+                            </div>
+                            <div>
+                              <p className="text-xs text-gray-500 font-medium">Contact Name</p>
+                              <p className="text-sm font-bold text-gray-900">{order.pickup?.contactName}</p>
+                            </div>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <Phone className="w-4 h-4 text-gray-500" />
-                            <a
-                              href={`tel:${order.pickup?.contactPhone}`}
-                              className="text-sm text-blue-600 hover:text-blue-700 font-medium underline"
-                            >
-                              {order.pickup?.contactPhone}
-                            </a>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              <div className="bg-blue-50 p-1.5 rounded-full">
+                                <Phone className="w-4 h-4 text-blue-600" />
+                              </div>
+                              <div>
+                                <p className="text-xs text-gray-500 font-medium">Phone</p>
+                                <p className="text-sm font-bold text-gray-900">{order.pickup?.contactPhone}</p>
+                              </div>
+                            </div>
                             <Button
                               size="sm"
-                              variant="outline"
-                              className="ml-auto h-8 px-3 text-xs bg-blue-50 hover:bg-blue-100 border-blue-300"
-                              onClick={() => window.location.href = `tel:${order.pickup?.contactPhone}`}
+                              className="h-8 px-4 text-xs bg-blue-600 text-white hover:bg-blue-700 border-none shadow-sm rounded-full"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                window.location.href = `tel:${order.pickup?.contactPhone}`;
+                              }}
                             >
-                              <Phone className="w-3 h-3 mr-1" />
+                              <Phone className="w-3 h-3 mr-1.5" />
                               Call
                             </Button>
                           </div>
                         </div>
-                        {order.pickup?.notes && (
-                          <div className="mt-3 p-3 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg border-2 border-blue-300 shadow-sm">
-                            <div className="flex items-start gap-2">
-                              <div className="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                                <FileText className="w-3.5 h-3.5 text-white" />
-                              </div>
-                              <div className="flex-1">
-                                <p className="text-xs font-bold text-blue-900 mb-1.5 uppercase tracking-wide flex items-center gap-1">
-                                  <AlertCircle className="w-3.5 h-3.5" />
-                                  Pickup Instructions
-                                </p>
-                                <p className="text-sm text-gray-800 leading-relaxed font-medium">{order.pickup.notes}</p>
-                              </div>
+
+                        {/* Notes */}
+                        <div className="mt-2">
+                          <p className="text-xs font-bold text-gray-500 mb-1.5 flex items-center gap-1.5 uppercase tracking-wide">
+                            <FileText className="w-3.5 h-3.5" /> Pickup Instructions
+                          </p>
+                          {order.pickup?.notes ? (
+                            <div className="p-3 bg-blue-50 border border-blue-100 rounded-lg shadow-sm">
+                              <p className="text-sm text-gray-800 leading-relaxed font-medium">
+                                {order.pickup.notes}
+                              </p>
                             </div>
-                          </div>
-                        )}
+                          ) : (
+                            <p className="text-sm text-gray-400 italic pl-1">No specific instructions provided</p>
+                          )}
+                        </div>
                       </div>
                     </div>
 
@@ -937,56 +948,69 @@ export default function DriverDashboardPage() {
 
                     {/* Dropoff Location */}
                     <div className="flex items-start gap-3">
-                      <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                      <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-1">
                         <MapPin className="w-4 h-4 text-green-600" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs font-semibold text-green-600 mb-1">DROPOFF (RECEIVER)</p>
-                        <div className="mb-2">
-                          <p className="text-xs text-gray-500 font-medium mb-0.5">Address</p>
-                          <p className="text-sm text-gray-900 font-medium break-words">{order.dropoff?.address}</p>
+                        <p className="text-xs font-bold text-green-600 mb-1 tracking-wider uppercase">DROPOFF (RECEIVER)</p>
+
+                        {/* Address */}
+                        <div className="mb-3">
+                          <p className="text-sm text-gray-900 font-semibold leading-snug break-words">
+                            {order.dropoff?.address}
+                          </p>
                         </div>
-                        <div className="mt-2 space-y-1">
-                          <p className="text-xs text-gray-500 font-medium mb-0.5">Name</p>
-                          <div className="flex items-center gap-2 text-sm text-gray-700">
-                            <User className="w-4 h-4 text-gray-500" />
-                            <span className="font-medium">{order.dropoff?.contactName}</span>
+
+                        {/* Contact Info Card */}
+                        <div className="bg-white rounded-md border border-green-100 shadow-sm p-3 mb-3">
+                          <div className="flex items-center gap-3 mb-3 border-b border-gray-100 pb-2">
+                            <div className="bg-green-50 p-1.5 rounded-full">
+                              <User className="w-4 h-4 text-green-600" />
+                            </div>
+                            <div>
+                              <p className="text-xs text-gray-500 font-medium">Contact Name</p>
+                              <p className="text-sm font-bold text-gray-900">{order.dropoff?.contactName}</p>
+                            </div>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <Phone className="w-4 h-4 text-gray-500" />
-                            <a
-                              href={`tel:${order.dropoff?.contactPhone}`}
-                              className="text-sm text-green-600 hover:text-green-700 font-medium underline"
-                            >
-                              {order.dropoff?.contactPhone}
-                            </a>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              <div className="bg-green-50 p-1.5 rounded-full">
+                                <Phone className="w-4 h-4 text-green-600" />
+                              </div>
+                              <div>
+                                <p className="text-xs text-gray-500 font-medium">Phone</p>
+                                <p className="text-sm font-bold text-gray-900">{order.dropoff?.contactPhone}</p>
+                              </div>
+                            </div>
                             <Button
                               size="sm"
-                              variant="outline"
-                              className="ml-auto h-8 px-3 text-xs bg-green-50 hover:bg-green-100 border-green-300"
-                              onClick={() => window.location.href = `tel:${order.dropoff?.contactPhone}`}
+                              className="h-8 px-4 text-xs bg-green-600 text-white hover:bg-green-700 border-none shadow-sm rounded-full"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                window.location.href = `tel:${order.dropoff?.contactPhone}`;
+                              }}
                             >
-                              <Phone className="w-3 h-3 mr-1" />
+                              <Phone className="w-3 h-3 mr-1.5" />
                               Call
                             </Button>
                           </div>
                         </div>
-                        {order.dropoff?.notes && (
-                          <div className="mt-3 p-3 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg border-2 border-green-300 shadow-sm">
-                            <div className="flex items-start gap-2">
-                              <div className="w-6 h-6 rounded-full bg-green-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                                <FileText className="w-3.5 h-3.5 text-white" />
-                              </div>
-                              <div className="flex-1">
-                                <p className="text-xs font-bold text-green-900 mb-1.5 uppercase tracking-wide flex items-center gap-1">
-                                  <AlertCircle className="w-3.5 h-3.5" />
-                                  Delivery Instructions
-                                </p>
-                                <p className="text-sm text-gray-800 leading-relaxed font-medium">{order.dropoff.notes}</p>
-                              </div>
+
+                        {/* Notes */}
+                        <div className="mt-2">
+                          <p className="text-xs font-bold text-gray-500 mb-1.5 flex items-center gap-1.5 uppercase tracking-wide">
+                            <FileText className="w-3.5 h-3.5" /> Delivery Instructions
+                          </p>
+                          {order.dropoff?.notes ? (
+                            <div className="p-3 bg-green-50 border border-green-100 rounded-lg shadow-sm">
+                              <p className="text-sm text-gray-800 leading-relaxed font-medium">
+                                {order.dropoff.notes}
+                              </p>
                             </div>
-                          </div>
-                        )}
+                          ) : (
+                            <p className="text-sm text-gray-400 italic pl-1">No specific instructions provided</p>
+                          )}
+                        </div>
                       </div>
                     </div>
 
@@ -1011,30 +1035,42 @@ export default function DriverDashboardPage() {
 
                 {/* Package Info */}
                 <div className="bg-gray-50 rounded-lg p-3 mb-4">
-                  <div className="flex items-center justify-between text-sm">
+                  <div className="flex items-start justify-between text-sm">
                     <div>
-                      <span className="text-gray-600">Package: </span>
-                      <span className="font-medium text-gray-900">{order.package?.size}</span>
+                      <span className="text-gray-500 text-xs uppercase tracking-wide font-bold block mb-1">Package</span>
+                      <span className="font-semibold text-gray-900">{order.package?.size}</span>
                       {order.package?.weight && (
                         <span className="text-gray-600"> • {order.package.weight}</span>
                       )}
                     </div>
-                    <div className="text-gray-600">
-                      {(order.distance?.km || order.distance?.distanceKm)?.toFixed(1)} km • {order.distance?.durationMinutes} min
+                    <div className="text-right">
+                      <span className="text-gray-500 text-xs uppercase tracking-wide font-bold block mb-1">Details</span>
+                      <div className="text-gray-700 font-medium">
+                        {(order.distance?.km || order.distance?.distanceKm)?.toFixed(1)} km • {order.distance?.durationMinutes} min
+                      </div>
                     </div>
                   </div>
+
+                  {order.payment?.driverEarnings && (
+                    <div className="mt-3 pt-3 border-t border-gray-200 flex justify-between items-center">
+                      <span className="text-sm font-medium text-gray-600">Your Earnings</span>
+                      <span className="text-lg font-bold text-green-600">
+                        CAD {(order.payment.driverEarnings / 100).toFixed(2)}
+                      </span>
+                    </div>
+                  )}
+
                   {order.package?.description && (
-                    <div className="mt-3 p-3 bg-gradient-to-br from-amber-50 to-orange-50 rounded-lg border-2 border-amber-300 shadow-sm">
+                    <div className="mt-3 p-3 bg-amber-50 rounded-lg border border-amber-100">
                       <div className="flex items-start gap-2">
-                        <div className="w-6 h-6 rounded-full bg-amber-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <Package className="w-3.5 h-3.5 text-white" />
+                        <div className="w-5 h-5 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <Package className="w-3 h-3 text-amber-600" />
                         </div>
                         <div className="flex-1">
-                          <p className="text-xs font-bold text-amber-900 mb-1.5 uppercase tracking-wide flex items-center gap-1">
-                            <AlertCircle className="w-3.5 h-3.5" />
-                            Package Details
+                          <p className="text-xs font-bold text-amber-800 mb-1 uppercase tracking-wide">
+                            Package Contents
                           </p>
-                          <p className="text-sm text-gray-800 leading-relaxed font-medium">{order.package.description}</p>
+                          <p className="text-sm text-gray-900 leading-relaxed font-medium">{order.package.description}</p>
                         </div>
                       </div>
                     </div>
