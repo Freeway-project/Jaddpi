@@ -8,6 +8,7 @@ import { UserDetails } from './UserInfoForm';
 import { couponAPI } from '../../../lib/api/coupon';
 import { Input } from '@workspace/ui/components/input';
 import { Button } from '@workspace/ui/components/button';
+import { Textarea } from '@workspace/ui/components/textarea';
 import ItemPhotoUpload from './ItemPhotoUpload';
 
 interface ReviewOrderProps {
@@ -34,9 +35,11 @@ interface ReviewOrderProps {
   onItemPhotoSelected?: (photoData: { base64: string; url?: string }) => void;
   itemPrice?: string;
   onItemPriceChanged?: (price: string) => void;
+  packageDescription?: string;
+  onPackageDescriptionChanged?: (description: string) => void;
 }
 
-export default function ReviewOrder({ sender, recipient, estimate, appliedCoupon, onCouponApplied, itemPhoto, onItemPhotoSelected, itemPrice, onItemPriceChanged }: ReviewOrderProps) {
+export default function ReviewOrder({ sender, recipient, estimate, appliedCoupon, onCouponApplied, itemPhoto, onItemPhotoSelected, itemPrice, onItemPriceChanged, packageDescription, onPackageDescriptionChanged }: ReviewOrderProps) {
   const [couponCode, setCouponCode] = useState('');
   const [isValidating, setIsValidating] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -132,6 +135,24 @@ export default function ReviewOrder({ sender, recipient, estimate, appliedCoupon
             onPhotoSelected={onItemPhotoSelected || (() => { })}
             existingPhoto={itemPhoto}
           />
+        </div>
+
+        {/* Package Description */}
+        <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <h4 className="font-semibold text-gray-900 mb-3 text-sm">Package Contents (Optional)</h4>
+          <p className="text-xs text-gray-500 mb-3">
+            Describe what you're sending (e.g., "Electronics", "Documents", "Clothing")
+          </p>
+          <Textarea
+            placeholder="What's in the package?"
+            value={packageDescription}
+            onChange={(e) => onPackageDescriptionChanged?.(e.target.value)}
+            className="min-h-[80px] text-sm border-gray-200 focus:border-blue-600 focus:ring-0 resize-none"
+            maxLength={200}
+          />
+          <p className="text-xs text-gray-400 mt-2 text-right">
+            {packageDescription?.length || 0}/200 characters
+          </p>
         </div>
 
         {/* Item Price */}

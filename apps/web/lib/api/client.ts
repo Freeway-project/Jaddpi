@@ -6,22 +6,43 @@ export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 export const tokenManager = {
   getToken: () => {
     if (typeof window !== 'undefined') {
-      const token = localStorage.getItem('authToken');
-      console.log('[Token Manager] Getting token:', token ? `${token.substring(0, 20)}...` : 'null');
-      return token;
+      try {
+        const token = localStorage.getItem('authToken');
+        console.log('[Token Manager] Getting token:', token ? `${token.substring(0, 20)}...` : 'null');
+        
+        // Basic token validation
+        if (token && token.split('.').length !== 3) {
+          console.warn('[Token Manager] Invalid token format, removing...');
+          localStorage.removeItem('authToken');
+          return null;
+        }
+        
+        return token;
+      } catch (error) {
+        console.error('[Token Manager] Error getting token:', error);
+        return null;
+      }
     }
     return null;
   },
   setToken: (token: string) => {
     if (typeof window !== 'undefined') {
-      console.log('[Token Manager] Setting token:', token ? `${token.substring(0, 20)}...` : 'null');
-      localStorage.setItem('authToken', token);
+      try {
+        console.log('[Token Manager] Setting token:', token ? `${token.substring(0, 20)}...` : 'null');
+        localStorage.setItem('authToken', token);
+      } catch (error) {
+        console.error('[Token Manager] Error setting token:', error);
+      }
     }
   },
   removeToken: () => {
     if (typeof window !== 'undefined') {
-      console.warn('[Token Manager] Removing token - Stack trace:', new Error().stack);
-      localStorage.removeItem('authToken');
+      try {
+        console.log('[Token Manager] Removing token');
+        localStorage.removeItem('authToken');
+      } catch (error) {
+        console.error('[Token Manager] Error removing token:', error);
+      }
     }
   },
 };

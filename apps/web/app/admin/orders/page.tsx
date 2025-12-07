@@ -3,14 +3,19 @@
 import { useState, useEffect } from 'react';
 import { adminAPI, Order } from '../../../lib/api/admin';
 import { Input } from '@workspace/ui/components/input';
-import { Package, Search, CheckCircle, Clock, XCircle, MapPin, User, DollarSign, ArrowUpDown, ArrowUp, ArrowDown, FileText } from 'lucide-react';
+import { Package, Search, CheckCircle, Clock, XCircle, MapPin, User, DollarSign, ArrowUpDown, ArrowUp, ArrowDown, FileText, X, Calendar, Phone, Image as ImageIcon } from 'lucide-react';
 
 const Modal = ({ isOpen, onClose, children }: { isOpen: boolean; onClose: () => void; children: React.ReactNode }) => {
   if (!isOpen) return null;
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex items-center justify-center">
-      <div className="bg-white p-4 rounded shadow-lg max-w-md w-full text-gray-900 relative">
-        <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onClick={onClose}>X</button>
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden relative animate-in fade-in zoom-in-95 duration-200">
+        <button
+          className="absolute top-4 right-4 z-10 p-2 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-900 transition-all"
+          onClick={onClose}
+        >
+          <X className="w-5 h-5" />
+        </button>
         {children}
       </div>
     </div>
@@ -393,66 +398,217 @@ export default function OrdersPage() {
       {/* Modal for displaying order details */}
       {selectedOrder && (
         <Modal isOpen={isModalOpen} onClose={closeModal}>
-          <div className="p-4 space-y-4">
-            <h3 className="text-lg font-semibold mb-4">Order Details</h3>
-            <div>
-              <strong>Order ID:</strong> {selectedOrder._id}
+          {/* Modal Header */}
+          <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-5 border-b border-blue-800">
+            <h3 className="text-xl font-bold text-white">Order Details</h3>
+            <p className="text-blue-100 text-sm mt-1">Order ID: {selectedOrder.orderId}</p>
+          </div>
+
+          {/* Scrollable Content */}
+          <div className="overflow-y-auto max-h-[calc(90vh-80px)] p-6 space-y-6">
+
+            {/* Order Info Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Customer Info */}
+              <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
+                <div className="flex items-center gap-2 mb-3">
+                  <User className="w-5 h-5 text-blue-600" />
+                  <h4 className="font-semibold text-gray-900">Customer</h4>
+                </div>
+                <div className="space-y-2 text-sm">
+                  <p className="text-gray-700"><span className="font-medium">Name:</span> {selectedOrder.userId?.profile?.name || 'N/A'}</p>
+                  <p className="text-gray-700"><span className="font-medium">Contact:</span> {selectedOrder.userId?.auth?.phone || selectedOrder.userId?.auth?.email || 'N/A'}</p>
+                </div>
+              </div>
+
+              {/* Driver Info */}
+              {selectedOrder.driver && (
+                <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
+                  <div className="flex items-center gap-2 mb-3">
+                    <User className="w-5 h-5 text-purple-600" />
+                    <h4 className="font-semibold text-gray-900">Driver</h4>
+                  </div>
+                  <div className="space-y-2 text-sm">
+                    <p className="text-gray-700"><span className="font-medium">Name:</span> {selectedOrder.driver?.profile?.name || 'N/A'}</p>
+                    <p className="text-gray-700 flex items-center gap-1">
+                      <Phone className="w-3 h-3" />
+                      {selectedOrder.driver?.auth?.phone || 'N/A'}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* Payment Info */}
+              <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
+                <div className="flex items-center gap-2 mb-3">
+                  <DollarSign className="w-5 h-5 text-green-600" />
+                  <h4 className="font-semibold text-gray-900">Payment</h4>
+                </div>
+                <div className="space-y-2 text-sm">
+                  <p className="text-gray-700"><span className="font-medium">Total:</span> <span className="text-lg font-bold text-green-600">${((selectedOrder.pricing?.total || 0) / 100).toFixed(2)}</span></p>
+                  <p className="text-gray-700"><span className="font-medium">Status:</span> {getPaymentBadge(selectedOrder.paymentStatus)}</p>
+                  {selectedOrder.payment?.stripeId && (
+                    <p className="text-gray-600 text-xs break-all"><span className="font-medium">Stripe ID:</span> {selectedOrder.payment.stripeId}</p>
+                  )}
+                </div>
+              </div>
+
+              {/* Timeline */}
+              <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
+                <div className="flex items-center gap-2 mb-3">
+                  <Calendar className="w-5 h-5 text-indigo-600" />
+                  <h4 className="font-semibold text-gray-900">Timeline</h4>
+                </div>
+                <div className="space-y-2 text-sm">
+                  <p className="text-gray-700">
+                    <span className="font-medium">Created:</span> {new Date(selectedOrder.createdAt).toLocaleString()}
+                  </p>
+                  {selectedOrder.timeline?.pickedUpAt && (
+                    <p className="text-gray-700">
+                      <span className="font-medium">Picked Up:</span> {new Date(selectedOrder.timeline.pickedUpAt).toLocaleString()}
+                    </p>
+                  )}
+                  {selectedOrder.timeline?.deliveredAt && (
+                    <p className="text-gray-700">
+                      <span className="font-medium">Delivered:</span> {new Date(selectedOrder.timeline.deliveredAt).toLocaleString()}
+                    </p>
+                  )}
+                </div>
+              </div>
             </div>
-            {selectedOrder.payment?.stripeId && (
-              <div>
-                <strong>Stripe Payment ID:</strong> {selectedOrder.payment.stripeId}
+
+            {/* Addresses */}
+            <div className="space-y-3">
+              <div className="bg-green-50 rounded-xl p-4 border border-green-200">
+                <div className="flex items-start gap-2">
+                  <MapPin className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-1">Pickup Address</h4>
+                    <p className="text-sm text-gray-700">{selectedOrder.pickup?.address || 'N/A'}</p>
+                    {(selectedOrder.pickup?.contactName || selectedOrder.pickup?.contactPhone) && (
+                      <p className="text-xs text-gray-600 mt-1">
+                        Contact: {selectedOrder.pickup.contactName} {selectedOrder.pickup.contactPhone}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-red-50 rounded-xl p-4 border border-red-200">
+                <div className="flex items-start gap-2">
+                  <MapPin className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-1">Dropoff Address</h4>
+                    <p className="text-sm text-gray-700">{selectedOrder.dropoff?.address || 'N/A'}</p>
+                    {(selectedOrder.dropoff?.contactName || selectedOrder.dropoff?.contactPhone) && (
+                      <p className="text-xs text-gray-600 mt-1">
+                        Contact: {selectedOrder.dropoff.contactName} {selectedOrder.dropoff.contactPhone}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Description */}
+            {selectedOrder.description && (
+              <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
+                <h4 className="font-semibold text-gray-900 mb-2">Description</h4>
+                <p className="text-sm text-gray-700">{selectedOrder.description}</p>
               </div>
             )}
-            <div>
-              <strong>Item Image:</strong>
-              <img src={selectedOrder.itemImage || '/placeholder.png'} alt="Item" className="w-32 h-32 object-cover mt-2" />
+
+            {/* Photos Section */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <ImageIcon className="w-5 h-5 text-gray-600" />
+                <h4 className="font-semibold text-gray-900">Photos</h4>
+              </div>
+
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                {selectedOrder.itemImage && (
+                  <div className="space-y-1">
+                    <p className="text-xs font-medium text-gray-600">Item Image</p>
+                    <img
+                      src={selectedOrder.itemImage}
+                      alt="Item"
+                      className="w-full h-32 object-cover rounded-lg border border-gray-200 hover:scale-105 transition-transform cursor-pointer"
+                      onClick={() => window.open(selectedOrder.itemImage, '_blank')}
+                    />
+                  </div>
+                )}
+
+                {selectedOrder.pickup?.photoUrl && (
+                  <div className="space-y-1">
+                    <p className="text-xs font-medium text-gray-600">Pickup Photo</p>
+                    <img
+                      src={selectedOrder.pickup.photoUrl}
+                      alt="Pickup"
+                      className="w-full h-32 object-cover rounded-lg border border-gray-200 hover:scale-105 transition-transform cursor-pointer"
+                      onClick={() => window.open(selectedOrder.pickup?.photoUrl, '_blank')}
+                    />
+                  </div>
+                )}
+
+                {selectedOrder.dropoff?.photoUrl && (
+                  <div className="space-y-1">
+                    <p className="text-xs font-medium text-gray-600">Dropoff Photo</p>
+                    <img
+                      src={selectedOrder.dropoff.photoUrl}
+                      alt="Dropoff"
+                      className="w-full h-32 object-cover rounded-lg border border-gray-200 hover:scale-105 transition-transform cursor-pointer"
+                      onClick={() => window.open(selectedOrder.dropoff?.photoUrl, '_blank')}
+                    />
+                  </div>
+                )}
+
+                {selectedOrder.package?.itemPhotoUrl && (
+                  <div className="space-y-1">
+                    <p className="text-xs font-medium text-gray-600">Package Photo</p>
+                    <img
+                      src={selectedOrder.package.itemPhotoUrl}
+                      alt="Package"
+                      className="w-full h-32 object-cover rounded-lg border border-gray-200 hover:scale-105 transition-transform cursor-pointer"
+                      onClick={() => window.open(selectedOrder.package?.itemPhotoUrl, '_blank')}
+                    />
+                  </div>
+                )}
+              </div>
             </div>
-            <div>
-              <strong>Pickup Photo:</strong>
-              <img src={selectedOrder.pickup?.photoUrl || '/placeholder.png'} alt="Pickup" className="w-32 h-32 object-cover mt-2" />
-            </div>
-            <div>
-              <strong>Dropoff Photo:</strong>
-              <img src={selectedOrder.dropoff?.photoUrl || '/placeholder.png'} alt="Dropoff" className="w-32 h-32 object-cover mt-2" />
-            </div>
-            <div>
-              <strong>Item Photo:</strong>
-              <img
-                src={selectedOrder.package?.itemPhotoUrl}
-                alt="Item Photo"
-                className="w-full h-auto rounded-lg mt-2"
-              />
-            </div>
-            <div>
-              <strong>Description:</strong> {selectedOrder.description || 'No description available'}
-            </div>
-            <div>
-              <strong>Driver Name:</strong> {selectedOrder.driver?.profile?.name || 'N/A'}
-            </div>
-            <div>
-              <strong>Driver Contact:</strong> {selectedOrder.driver?.auth?.phone || 'N/A'}
-            </div>
-            <div>
-              <strong>Pickup Address:</strong> {selectedOrder.pickup?.address || 'N/A'}
-            </div>
-            <div>
-              <strong>Dropoff Address:</strong> {selectedOrder.dropoff?.address || 'N/A'}
-            </div>
-            <div>
-              <strong>Order Placed At:</strong> {new Date(selectedOrder.createdAt).toLocaleString()}
-            </div>
-            {selectedOrder.timeline?.pickedUpAt && (
-              <div>
-                <strong>Picked Up At:</strong> {new Date(selectedOrder.timeline.pickedUpAt).toLocaleString()}
+
+            {/* Notes */}
+            {(selectedOrder.driverNote || selectedOrder.adminNote) && (
+              <div className="space-y-3">
+                <h4 className="font-semibold text-gray-900 flex items-center gap-2">
+                  <FileText className="w-5 h-5 text-gray-600" />
+                  Notes
+                </h4>
+                {selectedOrder.driverNote && (
+                  <div className="bg-blue-50 rounded-lg p-3 border border-blue-200">
+                    <p className="text-xs font-medium text-blue-800 mb-1">Driver Note</p>
+                    <p className="text-sm text-gray-700">{selectedOrder.driverNote}</p>
+                  </div>
+                )}
+                {selectedOrder.adminNote && (
+                  <div className="bg-amber-50 rounded-lg p-3 border border-amber-200">
+                    <p className="text-xs font-medium text-amber-800 mb-1">Admin Note</p>
+                    <p className="text-sm text-gray-700">{selectedOrder.adminNote}</p>
+                  </div>
+                )}
               </div>
             )}
-            {selectedOrder.timeline?.deliveredAt && (
-              <div>
-                <strong>Delivered At:</strong> {new Date(selectedOrder.timeline.deliveredAt).toLocaleString()}
+
+            {/* Status */}
+            <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
+              <h4 className="font-semibold text-gray-900 mb-2">Current Status</h4>
+              <div className="flex items-center gap-2">
+                {getStatusBadge(selectedOrder.status)}
+                {selectedOrder.distance && (
+                  <span className="text-sm text-gray-600">
+                    • {selectedOrder.distance.distanceKm?.toFixed(1)} km
+                  </span>
+                )}
               </div>
-            )}
-            <div>
-              <strong>Total Amount:</strong> ${((selectedOrder.pricing?.total || 0) / 100).toFixed(2)}
             </div>
           </div>
         </Modal>

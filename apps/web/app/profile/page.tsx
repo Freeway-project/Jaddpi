@@ -255,30 +255,6 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* Security Settings */}
-        <div className="bg-white rounded-lg shadow mt-6">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900">Security</h2>
-          </div>
-
-          <div className="p-6 space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-900">Password</p>
-                <p className="text-sm text-gray-500">Last changed 3 months ago</p>
-              </div>
-              <Button variant="outline" size="sm" disabled>Change</Button>
-            </div>
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-900">Two-Factor Authentication</p>
-                <p className="text-sm text-gray-500">Add an extra layer of security to your account</p>
-              </div>
-              <Button variant="outline" size="sm" disabled>Enable</Button>
-            </div>
-          </div>
-        </div>
-
         {/* Quick Actions */}
         <div className="mt-8 flex gap-4">
           <Button

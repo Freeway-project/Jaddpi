@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Input } from '@workspace/ui/components/input';
 import { Label } from '@workspace/ui/components/label';
 import { Button } from '@workspace/ui/components/button';
-import { MapPin, Loader2 } from 'lucide-react';
+import { MapPin, Loader2, X } from 'lucide-react';
 
 interface AddressSuggestion {
   description: string;
@@ -169,6 +169,13 @@ export default function AddressAutocomplete({
     }
   };
 
+  const handleClear = () => {
+    onChange('');
+    setShowSuggestions(false);
+    setSuggestions([]);
+    setIsLoading(false);
+  };
+
   return (
     <div className="relative">
       {label && (
@@ -186,15 +193,22 @@ export default function AddressAutocomplete({
           onFocus={handleInputFocus}
           placeholder={placeholder}
           disabled={disabled}
-          className={`h-14 pl-4 rounded-2xl border-slate-200 bg-slate-50 text-lg transition-all duration-200 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 placeholder:text-slate-400 disabled:bg-slate-100 disabled:text-slate-500 disabled:cursor-not-allowed ${className}`}
+          className={`h-14 pl-4 pr-12 rounded-2xl border-slate-200 bg-slate-50 text-lg transition-all duration-200 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 placeholder:text-slate-400 disabled:bg-slate-100 disabled:text-slate-500 disabled:cursor-not-allowed ${className}`}
         />
-        <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
-          {isLoading ? (
+        {value && !disabled && (
+          <button
+            onClick={handleClear}
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 p-1 rounded-full hover:bg-slate-200 transition-colors"
+            type="button"
+          >
+            <X className="w-5 h-5 text-slate-400 hover:text-slate-600" />
+          </button>
+        )}
+        {isLoading && (
+          <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
             <Loader2 className="w-5 h-5 animate-spin text-blue-500" />
-          ) : (
-            <MapPin className="w-5 h-5 text-slate-400 group-focus-within:text-blue-500 transition-colors" />
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
       {error && (

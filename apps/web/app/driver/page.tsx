@@ -316,9 +316,9 @@ export default function DriverDashboardPage() {
 
   const renderCompletedOrderDetails = (order: DriverOrder) => {
     return (
-      <div className="mt-4 space-y-3">
+      <div className="space-y-4">
         {/* Delivery Timeline */}
-        <div className="bg-green-50 rounded-lg p-3 sm:p-4 border border-green-200">
+        <div className="bg-green-50 rounded-xl p-4 sm:p-5 border-2 border-green-200">
           <h4 className="font-semibold text-green-900 mb-3 flex items-center gap-2 text-sm">
             <Clock className="w-4 h-4" />
             Delivery Timeline
@@ -393,7 +393,7 @@ export default function DriverDashboardPage() {
 
         {/* Photos */}
         {(order.pickup?.photoUrl || order.dropoff?.photoUrl) && (
-          <div className="bg-gray-50 rounded-lg p-3 sm:p-4 border border-gray-200">
+          <div className="bg-gray-50 rounded-xl p-4 sm:p-5 border-2 border-gray-200">
             <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2 text-sm">
               <ImageIcon className="w-4 h-4" />
               Delivery Photos
@@ -439,7 +439,7 @@ export default function DriverDashboardPage() {
 
         {/* Earnings Summary */}
         {order.payment?.driverEarnings && (
-          <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg p-3 sm:p-4 border-2 border-green-300">
+          <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-4 sm:p-5 border-2 border-green-300">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs text-green-700 font-medium">Your Earnings</p>
@@ -846,34 +846,39 @@ export default function DriverDashboardPage() {
         </div>
 
         {/* Orders List */}
-        <div className="space-y-4">
+        <div className="space-y-5">
           {orders?.length > 0 ? (
             orders.map((order) => (
-              <div key={order._id} className="bg-white rounded-lg shadow p-4 sm:p-6">
+              <div key={order._id} className="bg-white rounded-2xl shadow-lg border-2 border-gray-200 overflow-hidden">
                 {/* Order Header */}
-                <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="font-mono text-sm font-semibold text-gray-900">
-                        {order.orderId}
-                      </span>
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}>
-                        {formatStatus(order.status)}
-                      </span>
+                <div className="bg-gradient-to-r from-gray-50 to-blue-50 px-4 sm:px-6 py-4 border-b-2 border-gray-200">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-mono text-base sm:text-lg font-bold text-gray-900">
+                          {order.orderId}
+                        </span>
+                        <span className={`px-3 py-1 rounded-full text-xs font-bold ${getStatusColor(order.status)}`}>
+                          {formatStatus(order.status)}
+                        </span>
+                      </div>
+                      <p className="text-xs sm:text-sm text-gray-600">
+                        {new Date(order.createdAt).toLocaleDateString('en-US', {
+                          month: 'short',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })}
+                      </p>
                     </div>
-                    <p className="text-xs text-gray-500">
-                      {new Date(order.createdAt).toLocaleDateString('en-US', {
-                        month: 'short',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                      })}
-                    </p>
                   </div>
                 </div>
 
+                {/* Order Body */}
+                <div className="p-4 sm:p-6 space-y-5">
+
                 {/* Route Display */}
-                <div className="bg-gradient-to-br from-gray-50 to-blue-50/30 rounded-lg p-4 mb-4 border border-gray-200">
+                <div className="bg-gradient-to-br from-gray-50 to-blue-50/30 rounded-xl p-5 border-2 border-blue-100">
                   <div className="space-y-3">
                     {/* Pickup Location */}
                     <div className="flex items-start gap-3">
@@ -891,7 +896,7 @@ export default function DriverDashboardPage() {
                         </div>
 
                         {/* Contact Info Card */}
-                        <div className="bg-white rounded-md border border-blue-100 shadow-sm p-3 mb-3">
+                        <div className="bg-white rounded-lg border-2 border-blue-100 shadow-sm p-4 mb-3">
                           <div className="flex items-center gap-3 mb-3 border-b border-gray-100 pb-2">
                             <div className="bg-blue-50 p-1.5 rounded-full">
                               <User className="w-4 h-4 text-blue-600" />
@@ -926,18 +931,18 @@ export default function DriverDashboardPage() {
                         </div>
 
                         {/* Notes */}
-                        <div className="mt-2">
-                          <p className="text-xs font-bold text-gray-500 mb-1.5 flex items-center gap-1.5 uppercase tracking-wide">
-                            <FileText className="w-3.5 h-3.5" /> Pickup Instructions
+                        <div className="mt-3">
+                          <p className="text-xs font-bold text-gray-600 mb-2 flex items-center gap-1.5 uppercase tracking-wide">
+                            <FileText className="w-4 h-4" /> Pickup Instructions
                           </p>
                           {order.pickup?.notes ? (
-                            <div className="p-3 bg-blue-50 border border-blue-100 rounded-lg shadow-sm">
+                            <div className="p-4 bg-blue-50 border-2 border-blue-200 rounded-lg shadow-sm">
                               <p className="text-sm text-gray-800 leading-relaxed font-medium">
                                 {order.pickup.notes}
                               </p>
                             </div>
                           ) : (
-                            <p className="text-sm text-gray-400 italic pl-1">No specific instructions provided</p>
+                            <p className="text-sm text-gray-400 italic pl-2">No specific instructions provided</p>
                           )}
                         </div>
                       </div>
@@ -962,7 +967,7 @@ export default function DriverDashboardPage() {
                         </div>
 
                         {/* Contact Info Card */}
-                        <div className="bg-white rounded-md border border-green-100 shadow-sm p-3 mb-3">
+                        <div className="bg-white rounded-lg border-2 border-green-100 shadow-sm p-4 mb-3">
                           <div className="flex items-center gap-3 mb-3 border-b border-gray-100 pb-2">
                             <div className="bg-green-50 p-1.5 rounded-full">
                               <User className="w-4 h-4 text-green-600" />
@@ -997,18 +1002,18 @@ export default function DriverDashboardPage() {
                         </div>
 
                         {/* Notes */}
-                        <div className="mt-2">
-                          <p className="text-xs font-bold text-gray-500 mb-1.5 flex items-center gap-1.5 uppercase tracking-wide">
-                            <FileText className="w-3.5 h-3.5" /> Delivery Instructions
+                        <div className="mt-3">
+                          <p className="text-xs font-bold text-gray-600 mb-2 flex items-center gap-1.5 uppercase tracking-wide">
+                            <FileText className="w-4 h-4" /> Delivery Instructions
                           </p>
                           {order.dropoff?.notes ? (
-                            <div className="p-3 bg-green-50 border border-green-100 rounded-lg shadow-sm">
+                            <div className="p-4 bg-green-50 border-2 border-green-200 rounded-lg shadow-sm">
                               <p className="text-sm text-gray-800 leading-relaxed font-medium">
                                 {order.dropoff.notes}
                               </p>
                             </div>
                           ) : (
-                            <p className="text-sm text-gray-400 italic pl-1">No specific instructions provided</p>
+                            <p className="text-sm text-gray-400 italic pl-2">No specific instructions provided</p>
                           )}
                         </div>
                       </div>
@@ -1034,7 +1039,7 @@ export default function DriverDashboardPage() {
                 </div>
 
                 {/* Package Info */}
-                <div className="bg-gray-50 rounded-lg p-3 mb-4">
+                <div className="bg-gray-50 rounded-xl p-4 border-2 border-gray-200">
                   <div className="flex items-start justify-between text-sm">
                     <div>
                       <span className="text-gray-500 text-xs uppercase tracking-wide font-bold block mb-1">Package</span>
@@ -1061,13 +1066,13 @@ export default function DriverDashboardPage() {
                   )}
 
                   {order.package?.description && (
-                    <div className="mt-3 p-3 bg-amber-50 rounded-lg border border-amber-100">
-                      <div className="flex items-start gap-2">
-                        <div className="w-5 h-5 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <Package className="w-3 h-3 text-amber-600" />
+                    <div className="mt-4 p-4 bg-amber-50 rounded-lg border-2 border-amber-200">
+                      <div className="flex items-start gap-3">
+                        <div className="w-6 h-6 rounded-full bg-amber-200 flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <Package className="w-3.5 h-3.5 text-amber-700" />
                         </div>
                         <div className="flex-1">
-                          <p className="text-xs font-bold text-amber-800 mb-1 uppercase tracking-wide">
+                          <p className="text-xs font-bold text-amber-800 mb-2 uppercase tracking-wide">
                             Package Contents
                           </p>
                           <p className="text-sm text-gray-900 leading-relaxed font-medium">{order.package.description}</p>
@@ -1077,23 +1082,27 @@ export default function DriverDashboardPage() {
                   )}
                 </div>
 
-                {/* Actions */}
-                {renderOrderActions(order)}
+                </div>
+
+                {/* Actions Footer */}
+                <div className="px-4 sm:px-6 pb-5">
+                  {renderOrderActions(order)}
+                </div>
               </div>
             ))
           ) : (
-            <div className="bg-white rounded-lg shadow p-12 text-center">
+            <div className="bg-white rounded-2xl shadow-lg border-2 border-gray-200 p-12 text-center">
               {activeStatus === 'completed' ? (
-                <CheckCircle className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                <CheckCircle className="w-20 h-20 text-gray-300 mx-auto mb-4" />
               ) : (
-                <Package className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                <Package className="w-20 h-20 text-gray-300 mx-auto mb-4" />
               )}
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No orders found</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">No orders found</h3>
               <p className="text-gray-600">
                 {activeStatus === 'available'
-                  ? 'No available orders at the moment'
+                  ? 'No available orders at the moment. Check back soon!'
                   : activeStatus === 'completed'
-                    ? 'No completed deliveries yet'
+                    ? 'No completed deliveries yet. Complete your first order!'
                     : `No ${activeStatus.replace('_', ' ')} orders`}
               </p>
             </div>

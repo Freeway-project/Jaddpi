@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../../contexts/AuthContext';
 import { Button } from '@workspace/ui/components/button';
@@ -13,8 +13,16 @@ export default function AdminLoginPage() {
   const [password, setPassword] = useState('password123');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAuth();
+  const { login, isAuthenticated, user } = useAuth();
   const router = useRouter();
+
+  // Redirect if already authenticated
+  React.useEffect(() => {
+    if (isAuthenticated && user?.roles?.includes('admin')) {
+      console.log('Already authenticated with admin role, redirecting...');
+      router.replace('/admin/dashboard');
+    }
+  }, [isAuthenticated, user, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,11 +30,16 @@ export default function AdminLoginPage() {
     setIsLoading(true);
 
     try {
+      console.log('Attempting login...');
       await login(email, password);
-      console.log('Login successful, redirecting to dashboard...');
+      console.log('Login successful, waiting for state update...');
 
-      // Use router.replace instead of push to prevent going back to login
-      router.replace('/admin/dashboard');
+      // Wait a brief moment for state to update, then redirect
+      setTimeout(() => {
+        console.log('Redirecting to dashboard...');
+        router.replace('/admin/dashboard');
+      }, 100);
+      
     } catch (err: unknown) {
       if (err instanceof Error) {
         console.error('Login error:', err);

@@ -128,6 +128,7 @@ export default function BookingFlow({
   const [itemPhoto, setItemPhoto] = useState<string>(''); // base64
   const [itemPhotoUrl, setItemPhotoUrl] = useState<string>(''); // Cloudinary URL
   const [itemPrice, setItemPrice] = useState<string>('');
+  const [packageDescription, setPackageDescription] = useState<string>('');
   const [orderId, setOrderId] = useState<string | null>(null);
   const [isCreatingOrder, setIsCreatingOrder] = useState(false);
 
@@ -249,16 +250,18 @@ export default function BookingFlow({
           coordinates: pickupCoords,
           contactName: sender.name,
           contactPhone: sender.phone,
+          notes: sender.notes, // Pickup instructions
         },
         dropoff: {
           address: recipient.address,
           coordinates: dropoffCoords,
           contactName: recipient.name,
           contactPhone: recipient.phone,
+          notes: recipient.notes, // Dropoff/delivery instructions
         },
         package: {
           size: initialPackageSize,
-          description: recipient.notes || sender.notes,
+          description: packageDescription, // What's in the package
           itemPhotoUrl: itemPhotoUrl, // Cloudinary URL (mandatory)
           itemPrice: itemPrice ? Math.round(parseFloat(itemPrice) * 100) : undefined, // Convert to cents
         },
@@ -470,6 +473,8 @@ export default function BookingFlow({
                   }}
                   itemPrice={itemPrice}
                   onItemPriceChanged={setItemPrice}
+                  packageDescription={packageDescription}
+                  onPackageDescriptionChanged={setPackageDescription}
                 />
               )}
 
@@ -626,6 +631,8 @@ export default function BookingFlow({
                   }}
                   itemPrice={itemPrice}
                   onItemPriceChanged={setItemPrice}
+                  packageDescription={packageDescription}
+                  onPackageDescriptionChanged={setPackageDescription}
                 />
               )}
 

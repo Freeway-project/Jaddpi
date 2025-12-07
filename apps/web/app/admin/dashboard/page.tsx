@@ -4,10 +4,11 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { adminAPI, DashboardStats, Activity, Order, SystemMetrics, User } from '../../../lib/api/admin';
 import { Package, Users, DollarSign, Activity as ActivityIcon, TrendingUp, Clock, LogOut, Search, Filter, ChevronLeft, ChevronRight, Eye, Phone, Mail, MapPin, Calendar, FileText } from 'lucide-react';
-import { useAuthStore } from '../../../lib/stores/authStore';
+import { useAuth } from '../../../contexts/AuthContext';
 import { Button } from '@workspace/ui/components/button';
 import { Input } from '@workspace/ui/components/input';
 import toast from 'react-hot-toast';
+import { useAuthStore } from 'lib/stores/authStore';
 
 type Tab = 'overview' | 'orders' | 'users' | 'logs';
 

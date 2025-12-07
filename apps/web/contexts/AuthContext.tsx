@@ -34,44 +34,93 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     // Check if user is already authenticated on mount
     checkAuth();
+
+    // Add event listeners for tab focus and storage changes
+    const handleFocus = () => {
+      console.log('Tab focused, rechecking auth...');
+      checkAuth();
+    };
+
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'authToken') {
+        console.log('Auth token changed in storage, rechecking auth...');
+        checkAuth();
+      }
+    };
+
+    window.addEventListener('focus', handleFocus);
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+      window.removeEventListener('storage', handleStorageChange);
+    };
   }, []);
 
   const checkAuth = () => {
+    setIsLoading(true);
     const storedToken = tokenManager.getToken();
+    
     if (storedToken) {
-      setToken(storedToken);
-      // Decode JWT to get user info
+      // Validate token format and expiry
       try {
         const parts = storedToken.split('.');
         if (parts.length === 3 && parts[1]) {
           const payload = JSON.parse(atob(parts[1]));
+          
+          // Check if token is expired
+          const currentTime = Math.floor(Date.now() / 1000);
+          if (payload.exp && payload.exp < currentTime) {
+            console.warn('Token expired, clearing auth state');
+            tokenManager.removeToken();
+            setToken(null);
+            setUser(null);
+            setIsLoading(false);
+            return;
+          }
+
+          setToken(storedToken);
           setUser({
             uuid: payload.userId,
             email: payload.email,
-            displayName: payload.email || 'Admin',
+            displayName: payload.email || payload.name || 'Admin',
             roles: payload.roles || [],
             status: 'active',
             accountType: 'individual',
           });
+          console.log('Auth state restored from token');
+        } else {
+          throw new Error('Invalid token format');
         }
       } catch (error) {
         console.error('Failed to decode token:', error);
         tokenManager.removeToken();
+        setToken(null);
+        setUser(null);
       }
-      setIsLoading(false);
     } else {
-      setIsLoading(false);
+      console.log('No stored token found');
+      setToken(null);
+      setUser(null);
     }
+    
+    setIsLoading(false);
   };
 
   const login = async (email: string, password: string) => {
     try {
+      setIsLoading(true);
       console.log('AuthContext: Attempting login...');
       const response = await authAPI.login(email, password);
       console.log('AuthContext: Login response received', { hasToken: !!response.token, hasUser: !!response.user });
 
+      // Validate the response
+      if (!response.token || !response.user) {
+        throw new Error('Invalid response from server');
+      }
+
       // Token is already stored in localStorage by authAPI.login
-      // Now update the state
+      // Now update the state immediately
       setToken(response.token);
       setUser({
         uuid: response.user.uuid,
@@ -81,21 +130,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         status: response.user.status || 'active',
         accountType: response.user.accountType || 'individual',
       });
+      
+      setIsLoading(false);
       console.log('AuthContext: State updated successfully');
     } catch (error: any) {
+      setIsLoading(false);
       console.error('AuthContext: Login error', error);
       throw new Error(error.message || 'Login failed');
     }
   };
 
   const logout = () => {
+    console.log('AuthContext: Logging out...');
     authAPI.logout();
     setToken(null);
     setUser(null);
     router.push('/admin/login');
   };
 
-  const isAuthenticated = !!token || authAPI.isAuthenticated();
+  // Use state-based authentication status instead of computed property
+  const isAuthenticated = !!token && !!user;
 
   return (
     <AuthContext.Provider
