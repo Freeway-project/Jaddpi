@@ -35,7 +35,7 @@ export default function TermsPage() {
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-12">
           <h2 className="text-xl font-bold text-gray-900 mb-4">1. Service Provider</h2>
           <div className="space-y-2 text-gray-700">
-            <p><strong>Company Name:</strong> Blucodes Inc.</p>
+            <p><strong>Company Name:</strong> Blu Codes Inc.</p>
             <p><strong>Service Name:</strong> Jaddpi</p>
             <p><strong>Email:</strong> <a href="mailto:jaddpi1@gmail.com" className="text-blue-600 hover:underline">jaddpi1@gmail.com</a></p>
             <p><strong>Location:</strong> British Columbia, Canada</p>
@@ -78,10 +78,10 @@ export default function TermsPage() {
             {expandedSections['section3'] && (
               <div className="px-6 py-4 border-t border-gray-200 space-y-4 text-gray-700">
                 <p>
-                  Blucodes Inc. grants you a limited, non-exclusive, revocable, non-transferable license to download, install, and use Jaddpi on devices you own or control, solely for lawful and personal use in accordance with these Terms.
+                  Blu Codes Inc. grants you a limited, non-exclusive, revocable, non-transferable license to download, install, and use Jaddpi on devices you own or control, solely for lawful and personal use in accordance with these Terms.
                 </p>
                 <p>
-                  Blucodes Inc. retains all rights, title, and interest in Jaddpi, including all intellectual property rights. You may not copy, modify, distribute, or create derivative works based on Jaddpi without our express written permission.
+                  Blu Codes Inc. retains all rights, title, and interest in Jaddpi, including all intellectual property rights. You may not copy, modify, distribute, or create derivative works based on Jaddpi without our express written permission.
                 </p>
               </div>
             )}
@@ -234,7 +234,7 @@ export default function TermsPage() {
             {expandedSections['section10'] && (
               <div className="px-6 py-4 border-t border-gray-200 space-y-4 text-gray-700">
                 <p>
-                  Blucodes Inc. may update, modify, suspend, or discontinue any features or aspects of Jaddpi at any time. We will provide reasonable notice of material changes.
+                  Blu Codes Inc. may update, modify, suspend, or discontinue any features or aspects of Jaddpi at any time. We will provide reasonable notice of material changes.
                 </p>
                 <p>
                   Beta or experimental features may be incomplete and are subject to change without notice.
@@ -255,7 +255,7 @@ export default function TermsPage() {
             {expandedSections['section11'] && (
               <div className="px-6 py-4 border-t border-gray-200 space-y-4 text-gray-700">
                 <p>
-                  All trademarks, logos, content, and materials in Jaddpi are the property of Blucodes Inc. or their respective owners. You may not use them without express written permission.
+                  All trademarks, logos, content, and materials in Jaddpi are the property of Blu Codes Inc. or their respective owners. You may not use them without express written permission.
                 </p>
                 <p>
                   If you provide feedback or suggestions about Jaddpi, you grant us a perpetual, irrevocable, worldwide, royalty-free license to use such feedback.
@@ -279,7 +279,7 @@ export default function TermsPage() {
                   You may stop using Jaddpi and request account deletion at any time by contacting us at <a href="mailto:jaddpi1@gmail.com" className="text-blue-600 hover:underline">jaddpi1@gmail.com</a>.
                 </p>
                 <p>
-                  Blucodes Inc. may suspend or terminate your account if you breach these Terms, create legal risk, or violate applicable laws. We will provide notice where reasonably possible.
+                  Blu Codes Inc. may suspend or terminate your account if you breach these Terms, create legal risk, or violate applicable laws. We will provide notice where reasonably possible.
                 </p>
               </div>
             )}
@@ -323,7 +323,7 @@ export default function TermsPage() {
                   <strong>To the maximum extent permitted by law and subject to your non-waivable consumer rights under BC law:</strong>
                 </p>
                 <ul className="list-disc list-inside space-y-2">
-                  <li>Blucodes Inc. will not be liable for indirect, incidental, special, consequential, or punitive damages.</li>
+                  <li>Blu Codes Inc. will not be liable for indirect, incidental, special, consequential, or punitive damages.</li>
                   <li>Our total liability for any claim will not exceed CAD $100 or the amount you paid for Jaddpi in the past 12 months, whichever is greater.</li>
                   <li>These limitations do not apply to death, personal injury, or fraud.</li>
                 </ul>
@@ -343,7 +343,7 @@ export default function TermsPage() {
             {expandedSections['section15'] && (
               <div className="px-6 py-4 border-t border-gray-200 space-y-4 text-gray-700">
                 <p>
-                  You agree to indemnify and hold harmless Blucodes Inc. and its affiliates from any claims, losses, liabilities, damages, costs, and reasonable legal fees arising from:
+                  You agree to indemnify and hold harmless Blu Codes Inc. and its affiliates from any claims, losses, liabilities, damages, costs, and reasonable legal fees arising from:
                 </p>
                 <ul className="list-disc list-inside space-y-2">
                   <li>Your breach of these Terms.</li>
@@ -387,7 +387,7 @@ export default function TermsPage() {
             {expandedSections['section17'] && (
               <div className="px-6 py-4 border-t border-gray-200 space-y-4 text-gray-700">
                 <p>
-                  Blucodes Inc. may update these Terms from time to time. We will post updated Terms in Jaddpi and update the "Effective Date" at the top of this page.
+                  Blu Codes Inc. may update these Terms from time to time. We will post updated Terms in Jaddpi and update the "Effective Date" at the top of this page.
                 </p>
                 <p>
                   Continued use of Jaddpi after changes become effective constitutes your acceptance of the updated Terms. We recommend reviewing this page regularly.
@@ -408,7 +408,7 @@ export default function TermsPage() {
             {expandedSections['section18'] && (
               <div className="px-6 py-4 border-t border-gray-200 space-y-4 text-gray-700">
                 <p>
-                  <strong>Entire Agreement:</strong> These Terms and any policies referenced constitute the entire agreement between you and Blucodes Inc.
+                  <strong>Entire Agreement:</strong> These Terms and any policies referenced constitute the entire agreement between you and Blu Codes Inc.
                 </p>
                 <p>
                   <strong>Severability:</strong> If any provision of these Terms is invalid or unenforceable, the remaining provisions remain in full effect.
@@ -417,7 +417,7 @@ export default function TermsPage() {
                   <strong>No Waiver:</strong> Failure to enforce any provision does not constitute a waiver of that provision.
                 </p>
                 <p>
-                  <strong>Assignment:</strong> You may not assign these Terms without our written consent. Blucodes Inc. may assign these Terms in connection with a merger, acquisition, or sale of assets.
+                  <strong>Assignment:</strong> You may not assign these Terms without our written consent. Blu Codes Inc. may assign these Terms in connection with a merger, acquisition, or sale of assets.
                 </p>
               </div>
             )}
@@ -437,7 +437,7 @@ export default function TermsPage() {
                 <p>If you have questions about these Terms or our practices, please contact us:</p>
                 <div className="bg-gray-50 rounded p-4 space-y-2">
                   <p><strong>Email:</strong> <a href="mailto:jaddpi1@gmail.com" className="text-blue-600 hover:underline">jaddpi1@gmail.com</a></p>
-                  <p><strong>Company:</strong> Blucodes Inc.</p>
+                  <p><strong>Company:</strong> Blu Codes Inc.</p>
                   <p><strong>Service:</strong> Jaddpi</p>
                   <p><strong>Location:</strong> British Columbia, Canada</p>
                 </div>
@@ -448,7 +448,7 @@ export default function TermsPage() {
 
         {/* Footer */}
         <div className="mt-12 p-6 bg-gray-100 rounded-lg text-center text-gray-600">
-          <p>© {new Date().getFullYear()} Blucodes Inc. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Blu Codes Inc. All rights reserved.</p>
           <p className="text-sm mt-2">Last Updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
         </div>
 
