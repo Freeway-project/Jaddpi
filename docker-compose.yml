@@ -109,7 +109,7 @@ services:
 
   # Redis
   redis:
-    image: redis:alpine
+    image: redis:7-alpine
     container_name: jaddpi-redis
     restart: unless-stopped
     ports:
