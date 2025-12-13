@@ -43,17 +43,6 @@ jobs:
             echo "🛑 Stopping existing containers..."
             docker compose down
 
-            # Export Firebase public config env vars (read from .env on VPS)
-            # These are needed for the web app build to generate firebase-messaging-sw.js
-            export $(cat .env | grep '^NEXT_PUBLIC_FIREBASE_' | xargs)
-
-            # Build the frontend
-            echo "🔨 Building the frontend..."
-            cd apps/web || exit 1
-            pnpm install
-            pnpm run build
-            cd - || exit 1
-
             # Build new images
             echo "🔨 Building Docker images..."
             docker compose build --no-cache
