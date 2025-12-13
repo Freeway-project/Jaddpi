@@ -1,5 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google"
 import type { Metadata, Viewport } from 'next'
+import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 
 import "@workspace/ui/globals.css"
 import { Providers } from '../components/providers'
@@ -207,6 +209,8 @@ export default function RootLayout({
           </main>
           <Footer />
         </Providers>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   )
