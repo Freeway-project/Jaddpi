@@ -191,7 +191,7 @@ export default function FromToSearch({
   return (
     <div className={`bg-white rounded-xl sm:rounded-2xl shadow-md border border-gray-500 ${className}`}>
       {/* Scrollable Content */}
-      <div className="p-3 sm:p-6 space-y-3 sm:space-y-4 pb-20 sm:pb-6 max-h-[calc(100vh-200px)] sm:max-h-none overflow-y-auto sm:overflow-visible">
+      <div className="p-3 sm:p-6 space-y-3 sm:space-y-4 pb-32 sm:pb-6">
         {/* Address Selection */}
         <div className="space-y-3 sm:space-y-5">
           {/* Pickup Address */}
@@ -255,8 +255,8 @@ export default function FromToSearch({
                     key={type.id}
                     onClick={() => setPackageDetails({ ...packageDetails, type: type.id as PackageDetails['type'] })}
                     className={`flex flex-col items-center justify-center text-center p-2 sm:p-3 rounded-xl border-2 transition-all duration-200 h-24 sm:h-28 ${packageDetails.type === type.id
-                        ? 'bg-blue-600 text-white border-blue-600 shadow-lg shadow-blue-500/20'
-                        : 'bg-gray-50 text-gray-800 border-gray-200 hover:border-blue-400'
+                      ? 'bg-blue-600 text-white border-blue-600 shadow-lg shadow-blue-500/20'
+                      : 'bg-gray-50 text-gray-800 border-gray-200 hover:border-blue-400'
                       }`}
                   >
                     <span className="text-2xl sm:text-3xl">{type.icon}</span>
@@ -290,7 +290,7 @@ export default function FromToSearch({
       </div>
 
       {/* Fixed Search Button - Mobile */}
-      <div className="sm:hidden fixed bottom-0 left-0 right-0 p-3 bg-white border-t border-gray-200 shadow-lg">
+      <div className="sm:hidden fixed bottom-0 left-0 right-0 p-4 bg-white/90 backdrop-blur-md border-t border-gray-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-50 pb-[calc(16px+env(safe-area-inset-bottom))]">
         <Button
           onClick={handleSearch}
           disabled={!fromAddress || !toAddress || isLoading}
