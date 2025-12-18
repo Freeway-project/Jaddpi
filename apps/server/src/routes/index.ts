@@ -32,7 +32,7 @@ router.get("/status", async (_req, res, next) => {
         message: isActive ? 'Service is available' : 'Service is currently unavailable'
       }
     });
-  } catch (error) {Contact Us
+  } catch (error) {
     next(error);
   }
 });
