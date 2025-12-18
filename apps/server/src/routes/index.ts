@@ -32,6 +32,131 @@ router.get("/status", async (_req, res, next) => {
         message: isActive ? 'Service is available' : 'Service is currently unavailable'
       }
     });
+  } catch (error) {Contact Us
+    next(error);
+  }
+});
+
+// Public endpoint to handle contact form submissions
+router.post("/contact", async (req, res, next) => {
+  try {
+    const { name, email, mobile, message } = req.body;
+
+    // Validate required fields
+    if (!name || !email || !message) {
+      throw new ApiError(400, "Name, email, and message are required");
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      throw new ApiError(400, "Invalid email address");
+    }
+
+    // Send email notification to admin
+    const adminEmail = ENV.ADMIN_NOTIFICATION_EMAIL || ENV.SMTP_FROM_EMAIL;
+
+    if (adminEmail) {
+      try {
+        const submittedAt = new Date().toLocaleString('en-US', {
+          timeZone: 'America/Toronto',
+          dateStyle: 'full',
+          timeStyle: 'long'
+        });
+
+        await EmailService.sendEmail({
+          to: adminEmail,
+          subject: `New Contact Form Message from ${name}`,
+          text: `NEW CONTACT FORM SUBMISSION
+============================
+
+You have received a new message from your website contact form.
+
+FROM:
+${name}
+
+EMAIL ADDRESS:
+${email}
+
+MOBILE NUMBER:
+${mobile || 'Not provided'}
+
+MESSAGE:
+--------
+${message}
+--------
+
+SUBMITTED AT:
+${submittedAt}
+
+---
+Reply directly to ${email} to respond to this inquiry.`,
+          html: `
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>New Contact Form Submission</title>
+            </head>
+            <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+              <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 10px 10px 0 0; text-align: center;">
+                <h1 style="margin: 0; font-size: 24px;">📧 New Contact Form Submission</h1>
+              </div>
+
+              <div style="background: #ffffff; border: 1px solid #e0e0e0; border-top: none; padding: 30px; border-radius: 0 0 10px 10px;">
+                <p style="margin-top: 0; font-size: 14px; color: #666;">
+                  You have received a new message from your website contact form.
+                </p>
+
+                <div style="margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #f0f0f0;">
+                  <div style="font-weight: 600; color: #667eea; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px;">From</div>
+                  <div style="color: #333; font-size: 15px;"><strong>${name}</strong></div>
+                </div>
+
+                <div style="margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #f0f0f0;">
+                  <div style="font-weight: 600; color: #667eea; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px;">Email Address</div>
+                  <div style="color: #333; font-size: 15px;">
+                    <a href="mailto:${email}" style="color: #667eea; text-decoration: none;">${email}</a>
+                  </div>
+                </div>
+
+                <div style="margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #f0f0f0;">
+                  <div style="font-weight: 600; color: #667eea; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px;">Mobile Number</div>
+                  <div style="color: #333; font-size: 15px;">${mobile || 'Not provided'}</div>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                  <div style="font-weight: 600; color: #667eea; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px;">Message</div>
+                  <div style="background: #f8f9fa; padding: 15px; border-left: 4px solid #667eea; border-radius: 4px; margin-top: 10px; white-space: pre-wrap; color: #333; font-size: 15px;">${message}</div>
+                </div>
+
+                <div style="text-align: center;">
+                  <a href="mailto:${email}" style="display: inline-block; background: #667eea; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; margin-top: 20px; font-weight: 600;">Reply to ${name}</a>
+                </div>
+              </div>
+
+              <div style="margin-top: 30px; text-align: center; color: #666; font-size: 12px;">
+                <p>This email was automatically generated from your Jaddpi contact form.</p>
+                <p>Submitted at ${submittedAt}</p>
+              </div>
+            </body>
+            </html>
+          `
+        });
+
+        logger.info({ name, email }, 'Contact form email sent successfully');
+      } catch (emailError) {
+        // Log error but don't fail the request
+        logger.error({ error: emailError, email }, 'Failed to send contact form email');
+        // Still return success to user since we received their message
+      }
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Thank you for contacting us! We'll get back to you shortly."
+    });
   } catch (error) {
     next(error);
   }

@@ -28,7 +28,7 @@ Base Fare                    {{baseFare}}
 {{/bcCarbonFee}}{{#serviceFee}}Service Fee (1%)              {{fees.serviceFee}}
 {{/serviceFee}}{{/fees}}Subtotal                     {{subtotal}}
 {{#fees}}{{#gst}}GST (5%)                       {{fees.gst}}
-{{/gst}}{{/fees}}{{#hasDiscount}}Discount{{#if couponCode}} ({{couponCode}}){{/if}}                     -{{discount}}
+{{/gst}}{{/fees}}{{#hasDiscount}}Discount{{#couponCode}} ({{couponCode}}){{/couponCode}}                     -{{discount}}
 {{/hasDiscount}}----------------------------------------
 TOTAL PAID                   {{total}}
 

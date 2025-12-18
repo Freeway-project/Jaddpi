@@ -185,10 +185,10 @@ export default function ContactPage() {
               <p>
                 Or email us at{' '}
                 <a
-                  href={`mailto:${process.env.NEXT_PUBLIC_SUPPORT_EMAIL || 'support@Jaddpi.com'}`}
+                  href={`mailto:support@Jaddpi.com`}
                   className="text-blue-600 hover:underline font-semibold"
                 >
-                  {process.env.NEXT_PUBLIC_SUPPORT_EMAIL || 'support@Jaddpi.com'}
+                support@Jaddpi.com
                 </a>
               </p>
             </div>

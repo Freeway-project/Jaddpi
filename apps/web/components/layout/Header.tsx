@@ -126,7 +126,7 @@ export default function Header() {
                           >
                             <div className="flex items-center space-x-2">
                               <MapPin className="w-4 h-4" />
-                              <span>Track Order</span>
+                              <span>My Orders</span>
                             </div>
                           </Link>
                         )}

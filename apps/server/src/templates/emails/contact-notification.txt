@@ -1,0 +1,26 @@
+NEW CONTACT FORM SUBMISSION
+============================
+
+You have received a new message from your website contact form.
+
+FROM:
+{{ name }}
+
+EMAIL ADDRESS:
+{{ email }}
+
+MOBILE NUMBER:
+{{ mobile }}
+
+MESSAGE:
+--------
+{{ message }}
+--------
+
+SUBMITTED AT:
+{{ submittedAt }}
+
+---
+Reply directly to {{ email }} to respond to this inquiry.
+
+This email was automatically generated from your Jaddpi contact form.
