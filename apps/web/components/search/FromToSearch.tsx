@@ -191,7 +191,7 @@ export default function FromToSearch({
   return (
     <div className={`bg-white rounded-xl sm:rounded-2xl shadow-md border border-gray-500 ${className}`}>
       {/* Scrollable Content */}
-      <div className="p-3 sm:p-6 space-y-3 sm:space-y-4 pb-32 sm:pb-6">
+      <div className="p-3 sm:p-6 space-y-3 sm:space-y-4 pb-3 sm:pb-6">
         {/* Address Selection */}
         <div className="space-y-3 sm:space-y-5">
           {/* Pickup Address */}
@@ -289,8 +289,8 @@ export default function FromToSearch({
         )}
       </div>
 
-      {/* Fixed Search Button - Mobile */}
-      <div className="sm:hidden fixed bottom-0 left-0 right-0 p-4 bg-white/90 backdrop-blur-md border-t border-gray-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-50 pb-[calc(16px+env(safe-area-inset-bottom))]">
+      {/* Search Button - Mobile */}
+      <div className="sm:hidden px-3 pb-3">
         <Button
           onClick={handleSearch}
           disabled={!fromAddress || !toAddress || isLoading}
