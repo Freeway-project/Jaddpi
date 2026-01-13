@@ -230,18 +230,12 @@ export default function BookingFlow({
       return recipient.name && recipient.phone && recipient.address;
     }
     if (currentStep === 'review') {
-      return !!itemPhotoUrl; // Item photo URL is mandatory (Cloudinary URL)
+      return true; // Item photo is optional
     }
     return true;
   };
 
   const handleCreateOrder = async () => {
-    // Validate item photo URL before proceeding
-    if (!itemPhotoUrl) {
-      toast.error('Item photo is required. Please upload a photo.');
-      return;
-    }
-
     setIsCreatingOrder(true);
     try {
       const orderData = {
@@ -262,7 +256,7 @@ export default function BookingFlow({
         package: {
           size: initialPackageSize,
           description: packageDescription, // What's in the package
-          itemPhotoUrl: itemPhotoUrl, // Cloudinary URL (mandatory)
+          itemPhotoUrl: itemPhotoUrl || undefined, // Cloudinary URL (optional)
           itemPrice: itemPrice ? Math.round(parseFloat(itemPrice) * 100) : undefined, // Convert to cents
         },
         pricing: estimate.data.fare,

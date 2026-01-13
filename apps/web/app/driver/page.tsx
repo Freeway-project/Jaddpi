@@ -521,9 +521,9 @@ export default function DriverDashboardPage() {
                 className="w-full bg-blue-600 text-white hover:bg-blue-700 shadow-sm"
               >
                 <Camera className="w-4 h-4 mr-2" />
-                Capture Pickup Photo (Required)
+                Capture Pickup Photo (Optional)
               </Button>
-              <p className="text-xs text-amber-600 text-center">Photo required before starting delivery</p>
+              <p className="text-xs text-gray-500 text-center">Photo is optional but recommended</p>
             </>
           )}
           {hasPickupPhoto && (
@@ -535,7 +535,7 @@ export default function DriverDashboardPage() {
           <Button
             size="sm"
             onClick={() => handleUpdateStatus(order._id, 'in_transit')}
-            disabled={isLoading || !hasPickupPhoto}
+            disabled={isLoading}
             className="w-full bg-blue-600 hover:bg-blue-700 text-white"
           >
             {isLoading ? (
@@ -569,9 +569,9 @@ export default function DriverDashboardPage() {
                 className="w-full bg-green-600 text-white hover:bg-green-700 shadow-sm"
               >
                 <Camera className="w-4 h-4 mr-2" />
-                Capture Dropoff Photo (Required)
+                Capture Dropoff Photo (Optional)
               </Button>
-              <p className="text-xs text-amber-600 text-center">Photo required before completing delivery</p>
+              <p className="text-xs text-gray-500 text-center">Photo is optional but recommended</p>
             </>
           )}
           {hasDropoffPhoto && (
@@ -583,7 +583,7 @@ export default function DriverDashboardPage() {
           <Button
             size="sm"
             onClick={() => handleUpdateStatus(order._id, 'delivered')}
-            disabled={isLoading || !hasDropoffPhoto}
+            disabled={isLoading}
             className="w-full bg-green-600 hover:bg-green-700"
           >
             {isLoading ? (
