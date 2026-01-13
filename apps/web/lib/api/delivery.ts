@@ -65,7 +65,7 @@ export interface CreateOrderRequest {
     size: 'XS' | 'S' | 'M' | 'L';
     weight?: string;
     description?: string;
-    itemPhotoUrl: string; // Cloudinary URL (mandatory)
+    itemPhotoUrl?: string; // Cloudinary URL (optional)
     itemPrice?: number; // Price in cents for insurance
   };
   pricing: FareBreakdown;
