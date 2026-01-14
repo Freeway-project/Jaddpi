@@ -181,10 +181,7 @@ router.post("/create-order", requireAuth, async (req: Request, res: Response) =>
       throw new ApiError(400, "Package size is required");
     }
 
-    // Validate item photo URL is provided (mandatory for booking)
-    if (!packageDetails?.itemPhotoUrl) {
-      throw new ApiError(400, "Item photo is required");
-    }
+
 
     if (!pricing || !distance) {
       throw new ApiError(400, "Pricing and distance information are required");
@@ -281,7 +278,7 @@ router.post("/create-order", requireAuth, async (req: Request, res: Response) =>
     const expiresAt = new Date(now.getTime() + 30 * 60 * 1000); // 30 minutes
 
     // Use the item photo URL provided (already uploaded to Cloudinary in frontend)
-    const itemPhotoUrl = packageDetails.itemPhotoUrl;
+    const itemPhotoUrl = packageDetails?.itemPhotoUrl ? packageDetails?.itemPhotoUrl : "" ;
 
     // Create order
     const order = await DeliveryOrder.create({
