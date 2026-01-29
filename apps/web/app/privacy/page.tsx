@@ -354,7 +354,7 @@ export default function PrivacyPage() {
 
         {/* Footer */}
         <div className="mt-12 p-6 bg-gray-100 rounded-lg text-center text-gray-600">
-          <p>© {new Date().getFullYear()} Jaddpi Canada Inc. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Jaddpi Canada Inc All rights reserved.</p>
           <p className="text-sm mt-2">Last Updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
         </div>
 

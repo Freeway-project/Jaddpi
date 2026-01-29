@@ -17,7 +17,7 @@ export default function Footer() {
             </p>
             <div className="space-y-1">
               <p className="text-gray-500 text-xs">
-                © 2025 Jaddpi Canada Inc. All rights reserved.
+                © 2025 Jaddpi Canada Inc All rights reserved.
               </p>
               <p className="text-gray-500 text-xs">
                 Corporation Number: BC1572851
@@ -74,7 +74,7 @@ export default function Footer() {
         <div className="border-t border-gray-800 pt-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm">
             <p className="text-gray-500">
-              Built with ❤️ by Jaddpi Canada Inc.
+              Built with ❤️ by Jaddpi Canada Inc
             </p>
             <div className="flex items-center gap-4 flex-wrap justify-center">
               <p className="text-gray-500">
